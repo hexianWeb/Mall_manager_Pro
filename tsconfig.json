@@ -11,7 +11,18 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@img/*": ["src/assets/img/*"],
+      "@less/*": ["src/assets/less/*"],
+      "@libs/*": ["src/libs/*"],
+      "@plugins/*": ["src/plugins/*"],
+      "@cp/*": ["src/components/*"],
+      "@views/*": ["src/views/*"],
+      "@store/*":["src/stores/*"]
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
