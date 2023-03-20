@@ -1,13 +1,14 @@
 {
   "name": "hexianblog",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "prepare": "husky install",
-    "release": "standard-version --preset gitmoji-config"
+    "release": "standard-version --preset gitmoji-config",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
   "config": {
     "commitizen": {
@@ -26,6 +27,7 @@
     "@typescript-eslint/parser": "^5.55.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "commitizen": "^4.3.0",
+    "commitlint-config-cz": "^0.13.3",
     "conventional-changelog-gitmoji-config": "^1.4.7",
     "cz-customizable": "^7.0.0",
     "eslint": "^8.36.0",
