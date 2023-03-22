@@ -4,14 +4,14 @@ module.exports = {
     node: true,
     browser: true
   },
-  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'prettier', './.eslintrc-auto-import.json'],
+  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'prettier'],
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module'
   },
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'vue'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

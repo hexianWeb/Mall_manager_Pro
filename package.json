@@ -8,6 +8,8 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "release": "standard-version --preset gitmoji-config",
+    "lint-staged": "lint-staged",
+    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
   "config": {
