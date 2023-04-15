@@ -12,6 +12,8 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
+    // 是否生成映射文件 ts->js
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -24,6 +26,6 @@
       "@store/*": ["src/stores/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "./auto-imports.d.ts", "**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "./auto-imports.d.ts", "**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

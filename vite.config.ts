@@ -1,10 +1,19 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import { resolve } from 'path';
 export default defineConfig({
+  css: {
+    // css预处理器
+    preprocessorOptions: {
+      less: {
+        charset: false
+      }
+    }
+  },
   plugins: [
     // 自动按需引入 vue\vue-router\pinia 等的 api
     AutoImport({
@@ -26,7 +35,8 @@ export default defineConfig({
       // 解析的 UI 组件库，这里以 Element Plus 和 Ant Design Vue 为例
       resolvers: [ElementPlusResolver()]
     }),
-    vue()
+    vue(),
+    VueSetupExtend()
   ],
   resolve: {
     alias: {
