@@ -46,8 +46,6 @@
 <script setup lang="ts" name="Login">
 // ------------------------------服务逻辑-----------------------------------
 
-import { tr } from 'element-plus/es/locale';
-
 // 表单验证相关数据
 interface FormField {
   value: string;
