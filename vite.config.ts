@@ -14,13 +14,20 @@ export default defineConfig({
       }
     }
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://ceshi13.dishait.cn/admin', // 要代理的目标地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '') // 可选的路径重写规则
+      }
+    }
+  },
   plugins: [
     // 自动按需引入 vue\vue-router\pinia 等的 api
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'],
       resolvers: [ElementPlusResolver()],
-      // Generate corresponding .eslintrc-auto-import.json file.
-      // eslint globals Docs - https://eslint.org/docs/user-guide/configuring/language-options#specifying-globals
       eslintrc: {
         enabled: true // Default `false`
       }
