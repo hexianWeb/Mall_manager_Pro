@@ -1,8 +1,8 @@
 // index.ts
 import Request from './request';
 
-const request = new Request({
-  baseURL: '',
+const instance = new Request({
+  baseURL: '/api',
   timeout: 1000 * 60 * 5,
   interceptors: {
     // 请求拦截器
@@ -18,4 +18,4 @@ const request = new Request({
   }
 });
 
-export default request;
+export default instance;

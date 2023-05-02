@@ -1,16 +1,17 @@
 // index.ts
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import type { RequestConfig, RequestInterceptors } from '../types';
+import { HXAxiosRequestConfig, HXInterceptors, HXRequestConfig } from '../types';
+
 // 类拦截器
 class Request {
   // axios 实例
   instance: AxiosInstance;
   // 拦截器对象
-  interceptorsObj?: RequestInterceptors;
+  interceptorsObj?: HXInterceptors;
 
   // 注意 顺序很重要 虽然脑子正常人都想得到
-  constructor(config: RequestConfig) {
+  constructor(config: HXAxiosRequestConfig) {
     this.instance = axios.create(config);
     // 添加请求拦截器 **所有实例**
     this.instance.interceptors.request.use(
@@ -46,18 +47,18 @@ class Request {
   }
 
   // **单个实例** 这一类其实有点多余了
-  request<T>(config: RequestConfig): Promise<T> {
-    return new Promise((resolve, reject) => {
-      // 如果我们为单个请求设置拦截器，这里使用单个请求的拦截器
-      if (config.interceptors?.requestInterceptors) {
-        config = config.interceptors.requestInterceptors(config);
-      }
+  request<T>(config: HXRequestConfig<T>): Promise<T> {
+    // 如果我们为单个请求设置拦截器，这里使用单个请求的拦截器
+    if (config.interceptors?.requestInterceptors) {
+      config = config.interceptors.requestInterceptors(config);
+    }
+    return new Promise<T>((resolve, reject) => {
       this.instance
         .request<any, T>(config)
         .then((res) => {
           // 如果我们为单个响应设置拦截器，这里使用单个响应的拦截器
           if (config.interceptors?.responseInterceptors) {
-            res = config.interceptors.responseInterceptors<T>(res);
+            res = config.interceptors.responseInterceptors(res);
           }
           resolve(res);
         })
@@ -66,18 +67,18 @@ class Request {
         });
     });
   }
-  get<T>(config: RequestConfig): Promise<T> {
+  get<T>(config: HXRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'GET' });
   }
 
-  post<T>(config: RequestConfig): Promise<T> {
+  post<T>(config: HXRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' });
   }
 
-  delete<T>(config: RequestConfig): Promise<T> {
+  delete<T>(config: HXRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' });
   }
-  patch<T>(config: RequestConfig): Promise<T> {
+  patch<T>(config: HXRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'PATCH' });
   }
 }
