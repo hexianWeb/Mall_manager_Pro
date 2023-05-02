@@ -53,12 +53,12 @@ interface FormField {
 }
 // 创建响应式的数据对象
 const username: FormField = reactive({
-  value: '',
+  value: 'admin',
   error: null
 });
 
 const password: FormField = reactive({
-  value: '',
+  value: 'admin',
   error: null
 });
 // 表单提交处理函数

@@ -1,11 +1,4 @@
-<script setup lang="ts" name="App">
-import { getCategoryList } from './service/admin';
-
-onMounted(async () => {
-  const res = await getCategoryList();
-  console.log(res);
-});
-</script>
+<script setup lang="ts" name="App"></script>
 
 <template>
   <router-view></router-view>
