@@ -56,10 +56,6 @@ export const useUserStore = defineStore({
           message: `错误信息 ${err || '请求失败'}`
         });
       }
-      // // 3.获取并设置 请求用户菜单
-      // const UserMenusRes = await getUserMenusById({ id });
-      // this.setUserMenu(UserMenusRes);
-
       // // 4.跳转到用户第一个菜单 配合 router/guard 的 permission
       // const firstMenu = getFirstMenuPath(UserMenusRes);
       // router.push(firstMenu!.url);
