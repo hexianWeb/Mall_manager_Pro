@@ -1,9 +1,10 @@
 // index.ts
 import Request from './request';
+import { BASE_URL, TIME_OUT } from './request/config';
 
 const instance = new Request({
-  baseURL: '/api',
-  timeout: 1000 * 60 * 5,
+  baseURL: BASE_URL,
+  timeout: TIME_OUT,
   interceptors: {
     // 请求拦截器
     requestInterceptors: (config) => {
