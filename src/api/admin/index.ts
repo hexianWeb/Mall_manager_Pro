@@ -9,7 +9,7 @@ enum LoginAPI {
 }
 
 export function adminLogin(params: any) {
-  return request.get<LoginInfo>({
+  return request.post<LoginInfo>({
     url: LoginAPI.loginUrl,
     data: params
   });

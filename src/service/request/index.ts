@@ -2,7 +2,8 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { HXAxiosRequestConfig, HXInterceptors, HXRequestConfig } from '../types';
-
+import { useCookies } from '@vueuse/integrations/useCookies';
+import { USER_PERMISSION_KEY } from '@/constants/cache_keys';
 // 类拦截器
 class Request {
   // axios 实例
@@ -16,7 +17,11 @@ class Request {
     // 添加请求拦截器 **所有实例**
     this.instance.interceptors.request.use(
       function (config: InternalAxiosRequestConfig) {
-        // 在发送请求之前做些什么
+        // 在发送请求之前 设置请求头 携带token
+        const token = useCookies(['auth']).get(USER_PERMISSION_KEY);
+        if (token) {
+          config.headers['token'] = token;
+        }
         return config;
       },
       function (error) {
@@ -39,14 +44,16 @@ class Request {
     this.instance.interceptors.response.use(
       // 因为我们接口的数据都在res.data下，所以我们直接返回res.data
       (res: AxiosResponse) => {
+        if (res.data.msg === 'ok') {
+          return res.data.data;
+        }
         // then 和 catch前对数据的处理
-        return res.data;
       },
-      (err: any) => err
+      (err: any) => Promise.reject(err)
     );
   }
 
-  // **单个实例** 这一类其实有点多余了
+  // **单个实例**
   request<T>(config: HXRequestConfig<T>): Promise<T> {
     // 如果我们为单个请求设置拦截器，这里使用单个请求的拦截器
     if (config.interceptors?.requestInterceptors) {
@@ -63,6 +70,7 @@ class Request {
           resolve(res);
         })
         .catch((err: any) => {
+          console.log(err);
           reject(err);
         });
     });
