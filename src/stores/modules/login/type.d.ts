@@ -1,6 +1,6 @@
 export interface UserState {
-  token?: string;
-  userInfo?: UserInfo;
+  token?: string | null;
+  userInfo?: UserInfo | null;
   // userMenus?: UserMenus[];
 }
 

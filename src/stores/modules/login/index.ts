@@ -1,7 +1,7 @@
 import { USER_PERMISSION_KEY, USER_INFO_KEY } from '@/constants/cache_keys';
 import { useCookies } from '@vueuse/integrations/useCookies';
 import localCache from '@/utils/cache';
-import { adminAuth, adminLogin } from '@/service/admin';
+import { adminAuth, adminLogin } from '@/api/admin';
 import { Account, UserInfo, UserState } from './type';
 
 const docCookie = useCookies(['auth']);

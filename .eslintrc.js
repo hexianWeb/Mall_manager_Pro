@@ -18,7 +18,6 @@ module.exports = {
     'prettier/prettier': 'warn',
     'vue/multi-word-component-names': 'off',
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }]
-    // 'vue/no-setup-props-destructure': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }]
   },
   globals: {
     defineProps: 'readonly',

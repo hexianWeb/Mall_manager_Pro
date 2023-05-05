@@ -36,7 +36,7 @@
               <label for="password" v-if="password.error" class="error-message">{{ password.error }}</label>
             </transition>
           </div>
-          <input type="submit" value="Login" class="loginBtn" />
+          <input type="submit" value="Login" class="loginBtn" @click="handleSubmit" />
           <div class="bottom-text">没有账号? <a href="#">注册</a></div>
         </div>
       </div>
@@ -44,7 +44,9 @@
   </div>
 </template>
 <script setup lang="ts" name="Login">
-// ------------------------------服务逻辑-----------------------------------
+import router from '@/router';
+import { useUserStore } from '@/stores/modules/login';
+// ------------------------------服务于逻辑-----------------------------------
 
 // 表单验证相关数据
 interface FormField {
@@ -70,7 +72,10 @@ function handleSubmit() {
   // 如果表单验证通过，则提交表单
   if (!username.error && !password.error) {
     // 提交表单的逻辑
-    console.log('提交表单');
+    const userStore = useUserStore();
+    userStore.login({ username: username.value, password: password.value });
+    router.push('/');
+    return;
   }
 }
 
@@ -98,7 +103,7 @@ function validateField(field: string) {
     }
   }
 }
-//-------------------------------服务与UI-----------------------------------
+//-------------------------------服务于UI-----------------------------------
 // 定义组件数据类型
 interface Data {
   isScreenSmall: boolean;

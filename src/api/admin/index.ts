@@ -9,15 +9,14 @@ enum LoginAPI {
 }
 
 export function adminLogin(params: any) {
-  return request.instance<LoginInfo>({
+  return request.get<LoginInfo>({
     url: LoginAPI.loginUrl,
-    data: params,
-    method: 'GET'
+    data: params
   });
 }
 
 export function adminAuth() {
-  return request.instance<UserInfo>({
+  return request.post<UserInfo>({
     url: LoginAPI.authUrl
   });
 }
