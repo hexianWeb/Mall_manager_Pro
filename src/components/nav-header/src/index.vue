@@ -34,13 +34,17 @@
       </el-dropdown>
     </div>
     <!-- 修改密码 -->
-    <el-drawer v-model="viewChangePassword" title="修改密码">
+    <form-drawer
+      drawer-title="修改密码"
+      ref="formDrawerRef"
+      @submit="handleSendForm"
+      @cancel="handleCancelChangePassword"
+    >
       <el-form
         ref="formPasswordRef"
         label-position="right"
         label-width="100px"
         :model="formPassword"
-        style="max-width: 460px"
         :rules="rulesPassWord"
       >
         <el-form-item label="旧密码" prop="oldpassword">
@@ -53,18 +57,13 @@
           <el-input v-model="formPassword.repassword" />
         </el-form-item>
       </el-form>
-      <template #footer>
-        <div style="flex: auto">
-          <el-button @click="handleCancelChangePassword">cancel</el-button>
-          <el-button type="primary" @click="handleSendForm(formPasswordRef)">confirm</el-button>
-        </div>
-      </template>
-    </el-drawer>
+    </form-drawer>
   </div>
 </template>
 <script setup lang="ts" name="nav-header">
 // import breadComponent, { BreadcrumbProp } from '@/base-ui/breadcrumb/index';
 import type { FormInstance, FormRules } from 'element-plus';
+import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { useUserStore } from '@/stores/modules/login';
 import { useFullscreen } from '@vueuse/core';
 import { updatePassword } from '@/api/admin';
@@ -90,11 +89,10 @@ const handleFullSizeChange = () => toggle();
 const handleRefresh = () => location.reload();
 
 // 用户菜单功能触发逻辑
-const viewChangePassword = ref<Boolean>(false);
 const handleCommand = (command: string) => {
   switch (command) {
     case 'changePassword':
-      viewChangePassword.value = true;
+      formDrawerRef.value?.open();
       break;
     case 'logOutSystem':
       handleLogOut();
@@ -103,6 +101,9 @@ const handleCommand = (command: string) => {
       break;
   }
 };
+
+// 右侧修改密码框逻辑
+const formDrawerRef: Ref<typeof FormDrawer | null> = ref(null);
 
 const formPasswordRef = ref<FormInstance>();
 
@@ -136,13 +137,12 @@ const rulesPassWord = reactive<FormRules>({
   ]
 });
 
-const handleSendForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  await formEl.validate((valid) => {
+const handleSendForm = () => {
+  if (!formPasswordRef) return;
+  formPasswordRef.value!.validate((valid) => {
     if (valid) {
       updatePassword(formPassword)
         .then((res) => {
-          console.log(res);
           ElMessage({
             message: '修改密码成功',
             type: 'success'
@@ -153,17 +153,24 @@ const handleSendForm = async (formEl: FormInstance | undefined) => {
           handleLogOut();
         });
     } else {
-      ElMessage('密码修改失败');
+      ElMessage({
+        message: '输入信息格式错误',
+        type: 'error'
+      });
     }
   });
 };
+
 const handleCancelChangePassword = () => {
-  viewChangePassword.value = false;
+  formDrawerRef.value?.close();
   formPasswordRef.value?.resetFields();
 };
 
 const handleLogOut = () => {
-  alert('退出');
+  ElMessage({
+    message: '您尚未拥有修改密码的权利',
+    type: 'error'
+  });
 };
 </script>
 <style lang="less" scoped>
