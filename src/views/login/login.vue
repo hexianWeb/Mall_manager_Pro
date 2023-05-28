@@ -64,7 +64,7 @@ const password: FormField = reactive({
   error: null
 });
 // 表单提交处理函数
-function handleSubmit() {
+async function handleSubmit() {
   // 表单提交时进行验证
   validateField('username');
   validateField('password');
@@ -73,7 +73,7 @@ function handleSubmit() {
   if (!username.error && !password.error) {
     // 提交表单的逻辑
     const userStore = useUserStore();
-    userStore.login({ username: username.value, password: password.value });
+    await userStore.login({ username: username.value, password: password.value });
     router.push('/');
     return;
   }

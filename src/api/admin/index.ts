@@ -1,11 +1,12 @@
 import request from '@/service';
-import { LoginInfo, UserInfo } from '@/stores/modules/login/type';
+import { LoginInfo, UpdatePassword, UserInfo } from '@/stores/modules/login/type';
 import { LogOutInfo } from './type';
 
 enum LoginAPI {
   loginUrl = '/login',
   authUrl = '/getinfo',
-  LogOutUrl = '/logout'
+  LogOutUrl = '/logout',
+  updatePasswordURL = '/updatepassword'
 }
 
 export function adminLogin(params: any) {
@@ -24,5 +25,12 @@ export function adminAuth() {
 export function adminLogOut() {
   return request.post<LogOutInfo>({
     url: LoginAPI.LogOutUrl
+  });
+}
+
+export function updatePassword(params: any) {
+  return request.post<UpdatePassword>({
+    url: LoginAPI.updatePasswordURL,
+    data: params
   });
 }

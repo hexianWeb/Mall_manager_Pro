@@ -2,12 +2,16 @@
 <template>
   <div class="nav-header">
     <div class="left-wrapper">
-      <el-icon @click="handleFoldClick" :size="30">
+      <el-icon :size="30" @click="handleFoldClick">
         <component :is="isFold ? 'Expand' : 'Fold'"></component>
       </el-icon>
+      <el-icon :size="30" @click="handleFullSizeChange">
+        <component :is="isFullscreen ? 'Crop' : 'FullScreen'"></component>
+      </el-icon>
+      <el-icon :size="30" @click="handleRefresh"><Refresh /></el-icon>
       <!-- 面包屑 -->
       <div class="brand">
-        <breadComponent :breadCrumbs="breadcrumbs"></breadComponent>
+        <!-- <breadComponent :breadCrumbs="breadcrumbs"></breadComponent> -->
       </div>
     </div>
 
@@ -15,27 +19,62 @@
       <el-icon :size="20"><ChatDotRound /></el-icon>
       <el-icon :size="20"><CollectionTag /></el-icon>
       <el-icon :size="20"><Paperclip /></el-icon>
-      <el-tag>等级</el-tag>
-      <el-avatar :size="32" class="mr-3" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-      <el-dropdown>
+      <el-space wrap>
+        <el-tag>等级</el-tag>
+      </el-space>
+      <el-avatar :size="32" class="mr-3" :src="userInfo!.avatar" />
+      <el-dropdown @command="handleCommand">
         <span class="text-sm" style="color: var(--el-text-color-regular)"> 用户信息 </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>登出系统</el-dropdown-item>
+            <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
+            <el-dropdown-item command="logOutSystem">登出系统</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
+    <!-- 修改密码 -->
+    <el-drawer v-model="viewChangePassword" title="修改密码">
+      <el-form
+        ref="formPasswordRef"
+        label-position="right"
+        label-width="100px"
+        :model="formPassword"
+        style="max-width: 460px"
+        :rules="rulesPassWord"
+      >
+        <el-form-item label="旧密码" prop="oldpassword">
+          <el-input v-model="formPassword.oldpassword" />
+        </el-form-item>
+        <el-form-item label="新密码" prop="password">
+          <el-input v-model="formPassword.password" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="repassword">
+          <el-input v-model="formPassword.repassword" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="flex: auto">
+          <el-button @click="handleCancelChangePassword">cancel</el-button>
+          <el-button type="primary" @click="handleSendForm(formPasswordRef)">confirm</el-button>
+        </div>
+      </template>
+    </el-drawer>
   </div>
 </template>
 <script setup lang="ts" name="nav-header">
-import breadComponent, { BreadcrumbProp } from '@/base-ui/breadcrumb/index';
+// import breadComponent, { BreadcrumbProp } from '@/base-ui/breadcrumb/index';
+import type { FormInstance, FormRules } from 'element-plus';
 import { useUserStore } from '@/stores/modules/login';
-import { getBreadCrumbsByPath } from '@/utils/menu';
-
+import { useFullscreen } from '@vueuse/core';
+import { updatePassword } from '@/api/admin';
 const route = useRoute();
 
-// 伸缩栏页面逻辑
+const userStore = useUserStore();
+
+const userInfo = userStore.getUserInfo;
+
+// 伸缩按钮逻辑
 const emit = defineEmits(['foldClick']);
 const isFold = ref<Boolean>(false);
 const handleFoldClick = () => {
@@ -43,24 +82,88 @@ const handleFoldClick = () => {
   emit('foldClick', isFold.value);
 };
 
-// 面包屑页面逻辑
-const breadcrumbs = ref<BreadcrumbProp[]>([]);
-const userStore = useUserStore();
-const menus = userStore.getUserMenus;
+// 全屏按钮逻辑
+const { isFullscreen, toggle } = useFullscreen();
+const handleFullSizeChange = () => toggle();
 
-// watch 监控路径变化 修改面包屑
-watch(
-  () => route.path,
-  () => {
-    setBreadCrumb();
+// 刷新按钮逻辑
+const handleRefresh = () => location.reload();
+
+// 用户菜单功能触发逻辑
+const viewChangePassword = ref<Boolean>(false);
+const handleCommand = (command: string) => {
+  switch (command) {
+    case 'changePassword':
+      viewChangePassword.value = true;
+      break;
+    case 'logOutSystem':
+      handleLogOut();
+      break;
+    default:
+      break;
   }
-);
+};
 
-onMounted(() => {
-  setBreadCrumb();
+const formPasswordRef = ref<FormInstance>();
+
+const formPassword = reactive({
+  oldpassword: '',
+  password: '',
+  repassword: ''
 });
-const setBreadCrumb = () => {
-  breadcrumbs.value = getBreadCrumbsByPath(menus, route.path);
+
+const rulesPassWord = reactive<FormRules>({
+  oldpassword: [
+    {
+      required: true,
+      message: '旧密码不能为空',
+      trigger: 'blur'
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: '新密码不能为空',
+      trigger: 'blur'
+    }
+  ],
+  repassword: [
+    {
+      required: true,
+      message: '新密码不能为空',
+      trigger: 'blur'
+    }
+  ]
+});
+
+const handleSendForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate((valid) => {
+    if (valid) {
+      updatePassword(formPassword)
+        .then((res) => {
+          console.log(res);
+          ElMessage({
+            message: '修改密码成功',
+            type: 'success'
+          });
+        })
+        .finally(() => {
+          userStore.$reset;
+          handleLogOut();
+        });
+    } else {
+      ElMessage('密码修改失败');
+    }
+  });
+};
+const handleCancelChangePassword = () => {
+  viewChangePassword.value = false;
+  formPasswordRef.value?.resetFields();
+};
+
+const handleLogOut = () => {
+  alert('退出');
 };
 </script>
 <style lang="less" scoped>
@@ -70,12 +173,15 @@ const setBreadCrumb = () => {
   width: 100%;
   .left-wrapper {
     display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
     .brand {
       padding-left: 13px;
     }
-    align-items: center;
-    justify-content: flex-start;
-    flex: 1;
+    .el-icon {
+      padding: 5px;
+    }
   }
   .right-wrapper {
     display: flex;
@@ -85,9 +191,6 @@ const setBreadCrumb = () => {
     padding: 3px;
     .el-icon {
       margin: 5px;
-      &:last-of-type {
-        margin-right: 20px;
-      }
     }
     .text-sm {
       cursor: pointer;

@@ -11,6 +11,12 @@ export interface Account {
 export interface LoginInfo {
   token: string;
 }
+
+export interface UpdatePassword {
+  oldpassword: string;
+  password: string;
+  repassword: string;
+}
 export interface UserInfo {
   id: number;
   username: string;

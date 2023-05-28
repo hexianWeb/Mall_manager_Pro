@@ -2,12 +2,15 @@ import App from './App.vue';
 import router from './router';
 // 初始化css样式
 import 'normalize.css';
+// 引入加载进度条
+import 'nprogress/nprogress.css';
+import NProgress from 'nprogress';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import store, { setupStore } from './stores';
 import { setupRouterGuard } from './router/guard';
 const app = createApp(App);
-// 注册图标组件（不推荐 推荐自动引入） https://blog.csdn.net/zhoudingding/article/details/127237942
 
+// 注册图标组件（不推荐 推荐自动引入） https://blog.csdn.net/zhoudingding/article/details/127237942
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }

@@ -26,7 +26,7 @@ class Request {
       },
       function (error) {
         // 对请求错误做些什么
-        return Promise.reject(error);
+        return Promise.reject(error.response.data);
       }
     );
 
@@ -70,7 +70,7 @@ class Request {
           resolve(res);
         })
         .catch((err: any) => {
-          console.log(err);
+          console.log(err.response.data);
           reject(err);
         });
     });
