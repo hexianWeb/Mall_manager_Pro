@@ -1,8 +1,8 @@
-import { USER_PERMISSION_KEY, USER_INFO_KEY } from '@/constants/cache_keys';
+import { USER_PERMISSION_KEY, USER_INFO_KEY, USER_MENUS_KEY } from '@/constants/cache_keys';
 import { useCookies } from '@vueuse/integrations/useCookies';
 import localCache from '@/utils/cache';
 import { adminAuth, adminLogin } from '@/api/admin';
-import { Account, UserInfo, UserState } from './type';
+import { Account, Menu, UserInfo, UserState } from './type';
 
 const docCookie = useCookies(['auth']);
 export function setupUser() {
@@ -15,7 +15,8 @@ export const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     token: undefined,
-    userInfo: undefined
+    userInfo: undefined,
+    userMenus: undefined
   }),
   getters: {
     getToken(): string | null {
@@ -25,6 +26,13 @@ export const useUserStore = defineStore({
       const userInfo = this.userInfo || localCache.getCache(USER_INFO_KEY) || '';
       if (userInfo && typeof userInfo === 'object') {
         return userInfo as UserInfo;
+      }
+      return null;
+    },
+    getMenus(): Menu[] | null {
+      const userMenus = this.userMenus || localCache.getCache(USER_MENUS_KEY) || '';
+      if (userMenus && typeof userMenus === 'object') {
+        return userMenus as Menu[];
       }
       return null;
     }
@@ -38,6 +46,10 @@ export const useUserStore = defineStore({
       this.userInfo = userInfo;
       localCache.setCache(USER_INFO_KEY, userInfo);
     },
+    setUserMenus(userMenus: Menu[]) {
+      this.userMenus = userMenus;
+      localCache.setCache(USER_MENUS_KEY, userMenus);
+    },
     $reset() {
       docCookie.remove(USER_PERMISSION_KEY);
       localCache.clearCache();
@@ -50,6 +62,7 @@ export const useUserStore = defineStore({
         this.setToken(token);
         const userInfo = await adminAuth();
         this.setUserInfo(userInfo);
+        this.setUserMenus(userInfo.menus);
       } catch (err) {
         ElMessage({
           type: 'error',

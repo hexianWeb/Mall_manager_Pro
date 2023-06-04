@@ -11,7 +11,7 @@
       <el-icon :size="30" @click="handleRefresh"><Refresh /></el-icon>
       <!-- 面包屑 -->
       <div class="brand">
-        <!-- <breadComponent :breadCrumbs="breadcrumbs"></breadComponent> -->
+        <breadComponent :breadCrumbs="breadcrumbs"></breadComponent>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
   </div>
 </template>
 <script setup lang="ts" name="nav-header">
-// import breadComponent, { BreadcrumbProp } from '@/base-ui/breadcrumb/index';
+import breadComponent, { BreadcrumbProp } from '@/base-ui/breadcrumb/index';
 import type { FormInstance, FormRules } from 'element-plus';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { useUserStore } from '@/stores/modules/login';
@@ -102,6 +102,8 @@ const handleCommand = (command: string) => {
   }
 };
 
+// 面包屑逻辑
+const breadcrumbs = ref<BreadcrumbProp[]>([]);
 // 右侧修改密码框逻辑
 const formDrawerRef: Ref<typeof FormDrawer | null> = ref(null);
 

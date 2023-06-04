@@ -2,6 +2,7 @@ export interface UserState {
   token?: string | null;
   userInfo?: UserInfo | null;
   // userMenus?: UserMenus[];
+  userMenus?: Menu[] | null;
 }
 
 export interface Account {
@@ -46,22 +47,5 @@ export interface Menu {
   order: number;
   icon: string;
   method: string;
-  child: Child[];
-}
-
-export interface Child {
-  id: number;
-  rule_id: number;
-  status: number;
-  create_time: string;
-  update_time: string;
-  name: string;
-  desc?: string;
-  frontpath: string;
-  condition?: string;
-  menu: number;
-  order: number;
-  icon: string;
-  method: string;
-  child: any[];
+  child?: Menu[];
 }

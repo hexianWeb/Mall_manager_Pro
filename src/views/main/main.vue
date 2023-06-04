@@ -3,7 +3,7 @@
   <div class="main">
     <el-container class="main-content">
       <el-aside :width="isCollapse ? '62px' : '200px'">
-        <!-- <navMenu :isCollapse="isCollapse" /> -->
+        <navMenu :isCollapse="isCollapse" />
       </el-aside>
 
       <el-container class="page">
@@ -24,8 +24,7 @@
   </div>
 </template>
 <script lang="ts" setup name="main">
-// 引入 目录组件
-// import navMenu from '@cp/nav-menu/src/index.vue';
+import navMenu from '@cp/nav-menu/src/index.vue';
 import navHeader from '@cp/nav-header/src/index.vue';
 
 const isCollapse = ref<Boolean>(false);

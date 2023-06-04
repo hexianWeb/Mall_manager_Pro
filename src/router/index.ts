@@ -1,37 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-const routes: Array<RouteRecordRaw> = [
-  { path: '/', redirect: { name: 'MAIN' } },
-  {
-    path: '/login',
-    name: 'LOGIN',
-    meta: {
-      title: '登录',
-      keepAlive: true,
-      requireAuth: false
-    },
-    component: () => import('@/views/login/login.vue')
-  },
-  {
-    path: '/main',
-    name: 'MAIN',
-    meta: {
-      title: '首页',
-      keepAlive: true,
-      requireAuth: true
-    },
-    component: () => import('@views/main/main.vue')
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: () => import('@views/not-found/not-found.vue')
-  }
-];
+// 静态路由加载
+import staticRoutes from './modules/staticRouter';
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+  history: createWebHashHistory(),
+  routes: staticRoutes
 });
 export default router;
