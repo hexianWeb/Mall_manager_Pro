@@ -42,7 +42,7 @@ export const useUserStore = defineStore({
       this.token = token;
       docCookie.set(USER_PERMISSION_KEY, token);
     },
-    setUserInfo(userInfo: UserInfo) {
+    setUserInfo(userInfo: UserInfo | null) {
       this.userInfo = userInfo;
       localCache.setCache(USER_INFO_KEY, userInfo);
     },

@@ -46,7 +46,6 @@ module.exports = {
   ],
 
   // 步骤
-
   messages: {
     type: '请选择提交的类型：',
     customScope: '情输入修改的范围(可选)',

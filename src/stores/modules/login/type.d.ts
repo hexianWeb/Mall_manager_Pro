@@ -41,7 +41,7 @@ export interface Menu {
   update_time: string;
   name: string;
   desc?: string;
-  frontpath?: string;
+  frontpath?: string | null;
   condition?: string;
   menu: number;
   order: number;
