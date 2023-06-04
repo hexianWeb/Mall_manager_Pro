@@ -4,6 +4,7 @@ import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'a
 import { HXAxiosRequestConfig, HXInterceptors, HXRequestConfig } from '../types';
 import { useCookies } from '@vueuse/integrations/useCookies';
 import { USER_PERMISSION_KEY } from '@/constants/cache_keys';
+import { useUserStore } from '@/stores/modules/login';
 // 类拦截器
 class Request {
   // axios 实例
@@ -18,7 +19,8 @@ class Request {
     this.instance.interceptors.request.use(
       function (config: InternalAxiosRequestConfig) {
         // 在发送请求之前 设置请求头 携带token
-        const token = useCookies(['auth']).get(USER_PERMISSION_KEY);
+        const userStore = useUserStore();
+        const token = userStore.getToken;
         if (token) {
           config.headers['token'] = token;
         }
