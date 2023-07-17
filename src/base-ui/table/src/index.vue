@@ -77,13 +77,9 @@ const emit = defineEmits(['selectOptions']);
 const TableContent = ref<HTMLElement | null>(null);
 onMounted(() => {
   const instance = TableContent.value!;
-  console.log(instance);
-
   watch(
     () => instance?.scrollTop,
     (newScrollY) => {
-      console.log(newScrollY);
-
       // 监听鼠标下移事件改为右移
       const scrollX = (newScrollY * instance.scrollWidth) / instance.scrollHeight;
       instance.scrollTop = scrollX;

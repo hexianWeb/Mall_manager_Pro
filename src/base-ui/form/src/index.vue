@@ -82,7 +82,6 @@ const queryClick = () => {
 
 // 侦听器
 watch(formModel, (newValue: any) => {
-  console.log(newValue);
   emit('formChange', newValue);
 });
 </script>

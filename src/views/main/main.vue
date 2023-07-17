@@ -12,6 +12,9 @@
         </el-header>
         <el-container class="page-content">
           <el-main>
+            <div class="nav-list">
+              <navList></navList>
+            </div>
             <router-view v-slot="{ Component }">
               <transition appear mode="out-in">
                 <component :is="Component" />
@@ -26,6 +29,7 @@
 <script lang="ts" setup name="main">
 import navMenu from '@cp/nav-menu/src/index.vue';
 import navHeader from '@cp/nav-header/src/index.vue';
+import navList from '@/base-ui/navList/index.vue';
 
 const isCollapse = ref<Boolean>(false);
 
@@ -53,6 +57,7 @@ const handleFoldClick = (isFold: Boolean) => {
   .el-header {
     display: flex;
     color: #333;
+    background-color: #fff;
     text-align: center;
     align-items: center;
     height: 48px !important;
@@ -78,6 +83,9 @@ const handleFoldClick = (isFold: Boolean) => {
     color: #333;
     text-align: center;
     background-color: #f0f2f5;
+    .nav-list {
+      width: 100%;
+    }
   }
 }
 

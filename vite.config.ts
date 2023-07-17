@@ -15,6 +15,7 @@ export default defineConfig({
     }
   },
   server: {
+    port: 5173,
     proxy: {
       '/api': {
         target: 'http://ceshi13.dishait.cn/admin', // 要代理的目标地址

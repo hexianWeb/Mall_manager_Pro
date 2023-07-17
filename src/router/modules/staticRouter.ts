@@ -1,7 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
-  // { path: '/', redirect: { name: 'admin' } },
   {
     path: '/login',
     name: 'login',

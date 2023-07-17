@@ -47,14 +47,14 @@
         :model="formPassword"
         :rules="rulesPassWord"
       >
-        <el-form-item label="旧密码" prop="oldpassword">
-          <el-input v-model="formPassword.oldpassword" />
+        <el-form-item label="旧密码" prop="oldPassword">
+          <el-input v-model="formPassword.oldPassword" />
         </el-form-item>
         <el-form-item label="新密码" prop="password">
           <el-input v-model="formPassword.password" />
         </el-form-item>
-        <el-form-item label="确认密码" prop="repassword">
-          <el-input v-model="formPassword.repassword" />
+        <el-form-item label="确认密码" prop="rePassword">
+          <el-input v-model="formPassword.rePassword" />
         </el-form-item>
       </el-form>
     </form-drawer>
@@ -110,13 +110,13 @@ const formDrawerRef: Ref<typeof FormDrawer | null> = ref(null);
 const formPasswordRef = ref<FormInstance>();
 
 const formPassword = reactive({
-  oldpassword: '',
+  oldPassword: '',
   password: '',
-  repassword: ''
+  rePassword: ''
 });
 
 const rulesPassWord = reactive<FormRules>({
-  oldpassword: [
+  oldPassword: [
     {
       required: true,
       message: '旧密码不能为空',
@@ -130,7 +130,7 @@ const rulesPassWord = reactive<FormRules>({
       trigger: 'blur'
     }
   ],
-  repassword: [
+  rePassword: [
     {
       required: true,
       message: '新密码不能为空',

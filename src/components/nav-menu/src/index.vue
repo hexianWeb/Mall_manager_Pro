@@ -5,17 +5,17 @@
       <!-- Logo 部分-->
       <div class="logo">
         <img class="img" src="@/assets/img/logo.png" alt="logo" />
-        <span class="title" v-show="!isCollapse">商城后台管理</span>
+        <span class="title" v-show="!props.isCollapse">商城后台管理</span>
       </div>
       <!-- 菜单部分 -->
       <el-menu
-        :unique-opened="false"
+        unique-opened="false"
         :default-active="currentActiveMenuIndex"
         class="el-menu-vertical"
         active-text-color="#ffd04b"
         background-color="#001529"
         text-color="#B7BDC3"
-        :collapse="isCollapse"
+        :collapse="props.isCollapse"
       >
         <template v-for="menu in menus" :key="menu.id">
           <!-- CASE1： 一级菜单 -->
@@ -53,15 +53,14 @@ import { isUrl } from '@/utils/common';
 import { getMenuByPath } from '@/utils/menu';
 
 // 父子组件传值 伸展
-defineProps({
+const props = defineProps({
   isCollapse: {
     type: Boolean,
-    defalut: false,
+    default: false,
     require: true
   }
 });
-
-// // 获取menus数据
+// 获取menus数据
 const menus = useUserStore().getMenus;
 
 const router = useRouter();
