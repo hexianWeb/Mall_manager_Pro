@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="tabs">
-      <el-tabs v-model="activeTab" type="card" class="demo-tabs" @tab-change="changeTab">
+      <el-tabs v-model="activeTab" type="card" class="demo-tabs" @tab-change="changeTab" @tab-remove="removeTab">
         <el-tab-pane
           v-for="item in tabsList"
           :key="item.path"
@@ -74,6 +74,26 @@ function initTabPage() {
   if (localTabsList) {
     tabsList.value = localTabsList;
   }
+}
+
+/**
+ *  根据标签导航栏要跳转的 tab
+ * @param tab 要移除的 tab
+ */
+function removeTab(tab: string) {
+  let tabs = tabsList.value;
+  if (tab == activeTab.value) {
+    tabs.forEach((item, index) => {
+      if (tab == item.path) {
+        const nextTab = tabs[index + 1] || tabs[index - 1];
+        if (nextTab) {
+          activeTab.value = nextTab.path;
+        }
+      }
+    });
+    tabsList.value = tabsList.value.filter((item) => item.path !== tab);
+  }
+  cookies.set('TAB_LIST', tabsList.value);
 }
 initTabPage();
 onBeforeRouteUpdate((to) => {
