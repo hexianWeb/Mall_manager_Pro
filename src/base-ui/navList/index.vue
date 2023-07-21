@@ -21,9 +21,8 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
+            <el-dropdown-item>关闭其他</el-dropdown-item>
+            <el-dropdown-item>全部关闭</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -95,7 +94,9 @@ function removeTab(tab: string) {
   }
   cookies.set('TAB_LIST', tabsList.value);
 }
+
 initTabPage();
+
 onBeforeRouteUpdate((to) => {
   activeTab.value = to.path;
   addTab({

@@ -1,14 +1,14 @@
 import router from '@/router/index';
 import { Menu } from '@/stores/modules/login/type';
-import { ElNotification } from 'element-plus';
-const asyncRoutes = [
+import { RouteRecordRaw } from 'vue-router';
+const asyncRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: '/',
+    name: 'index',
     meta: {
-      title: '首页'
+      title: '主控台'
     },
-    component: () => import('@views/main/main.vue')
+    component: () => import('@views/index/index.vue')
   },
   {
     path: '/goods/list',
@@ -16,7 +16,7 @@ const asyncRoutes = [
     meta: {
       title: '商品页'
     },
-    component: () => import('@views/goods/list.vue')
+    component: () => import('@/views/goods/list.vue')
   }
 ];
 // 动态添加路由的方法

@@ -9,7 +9,7 @@
       </div>
       <!-- 菜单部分 -->
       <el-menu
-        unique-opened="false"
+        :unique-opened="false"
         :default-active="currentActiveMenuIndex"
         class="el-menu-vertical"
         active-text-color="#ffd04b"

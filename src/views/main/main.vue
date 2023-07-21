@@ -16,9 +16,11 @@
               <navList></navList>
             </div>
             <router-view v-slot="{ Component }">
-              <transition appear mode="out-in">
-                <component :is="Component" />
-              </transition>
+              <keep-alive max="10">
+                <transition appear mode="out-in">
+                  <component :is="Component" />
+                </transition>
+              </keep-alive>
             </router-view>
           </el-main>
         </el-container>
@@ -31,9 +33,9 @@ import navMenu from '@cp/nav-menu/src/index.vue';
 import navHeader from '@cp/nav-header/src/index.vue';
 import navList from '@/base-ui/navList/index.vue';
 
-const isCollapse = ref<Boolean>(false);
+const isCollapse = ref<boolean>(false);
 
-const handleFoldClick = (isFold: Boolean) => {
+const handleFoldClick = (isFold: boolean) => {
   isCollapse.value = isFold;
 };
 </script>

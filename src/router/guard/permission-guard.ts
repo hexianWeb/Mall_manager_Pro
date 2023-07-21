@@ -6,7 +6,7 @@ import { useUserStore } from '@/stores/modules/login';
 import NProgress from '@/utils/loading';
 
 export const createPermissionGuard = (router: Router): void => {
-  let hasRoute = true;
+  let hasRouteInfo = false;
   router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
     // 1.NProgress 开始
@@ -31,11 +31,11 @@ export const createPermissionGuard = (router: Router): void => {
     }
 
     // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
-    if (token && hasRoute) {
+    if (token && !hasRouteInfo) {
       const menus = userStore.getMenus;
       // 动态添加路由
       dynamicAddRouter(menus!);
-      hasRoute = false;
+      hasRouteInfo = true;
       return next(to.fullPath);
     } else {
       next();

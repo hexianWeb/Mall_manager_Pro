@@ -1,6 +1,8 @@
 import App from './App.vue';
 // 初始化css样式
 import 'normalize.css';
+// 引入 tailwindcss
+import './assets/tailMain.css';
 // 引入加载进度条
 import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
