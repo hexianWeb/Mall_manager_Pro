@@ -1,6 +1,6 @@
 <!-- VueWithTS -->
 <template>
-  <div class="content">
+  <div class="header">
     <el-row :gutter="20">
       <el-row v-if="panelsData?.length == 0">
         <el-col :span="6" v-for="i in 4" :key="i">
@@ -45,17 +45,43 @@
         </el-card>
       </el-col>
     </el-row>
+    <iconList />
+  </div>
+  <div class="middle mt-5">
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <echartIndex />
+      </el-col>
+      <el-col :span="12">
+        <indexCard title="店铺以及商品提示" tip="请注意及时处理" :btns="goodsData" v-auth="['getStatistics2,GET']" />
+        <indexCard title="交易提示" tip="需要及时处理的交易订单" :btns="orderData" />
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script setup lang="ts" name="index">
-import { getStatistics1 } from '@/api/index/index';
-import { Statistics1 } from '@/api/index/type';
+import { getStatistics1, getStatistics2 } from '@/api/index/index';
+import { Statistics1, btnItem } from '@/api/index/type';
 import magicNumber from '@/base-ui/magicNumber/index.vue';
+import iconList from '@cp/icon-list/src/index.vue';
+import echartIndex from '@cp/echart-index/src/index.vue';
+import indexCard from '@/base-ui/indexCard/index.vue';
+
 const panelsData = ref<Statistics1[]>();
+
+const goodsData = ref<btnItem[]>();
+
+const orderData = ref<btnItem[]>();
 
 getStatistics1().then((res) => {
   panelsData.value = res.panels;
-  console.log(panelsData.value);
+});
+
+getStatistics2().then((res) => {
+  console.log(res);
+
+  goodsData.value = res.goods;
+  orderData.value = res.order;
 });
 </script>
 <style lang="less" scoped></style>

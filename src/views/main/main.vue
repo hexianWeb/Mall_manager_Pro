@@ -16,8 +16,8 @@
               <navList></navList>
             </div>
             <router-view v-slot="{ Component }">
-              <keep-alive max="10">
-                <transition appear mode="out-in">
+              <keep-alive>
+                <transition name="fade">
                   <component :is="Component" />
                 </transition>
               </keep-alive>

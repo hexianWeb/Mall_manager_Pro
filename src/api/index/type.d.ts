@@ -11,3 +11,8 @@ export interface Statistics1 {
 export interface PanelsData {
   panels: Statistics1[];
 }
+
+export interface btnItem {
+  value: string;
+  label: string;
+}

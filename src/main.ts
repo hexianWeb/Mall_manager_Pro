@@ -6,13 +6,18 @@ import './assets/tailMain.css';
 // 引入加载进度条
 import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
+// ICON 图标引入
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
+// 路由信息引入
 import router from '@/router';
+// 持久化状态管理工具
 import pinia, { setupStore } from './stores';
+// 全局路由守卫引入
 import { setupRouterGuard } from './router/guard';
 // errorHandler 全局错误捕捉
 import errorHandler from '@/utils/errorHandler';
-
+// 全局自定义指令引入
+import directive from './directives/index';
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;
@@ -28,4 +33,5 @@ setupStore();
 
 setupRouterGuard();
 app.use(router);
+app.use(directive);
 app.mount('#app');
