@@ -1,5 +1,5 @@
 import request from '@/service';
-import { ImageCatList, imageList } from './type';
+import { ImageCatList, imageList } from '@/api/image/type';
 enum ImageAPI {
   cateListUrl = '/image_class'
 }

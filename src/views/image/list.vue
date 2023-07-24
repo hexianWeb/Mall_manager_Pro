@@ -41,7 +41,7 @@
           </div>
         </el-aside>
         <el-main class="flex flex-col rounded">
-          <mainContainer :cate-id="activatedId" ref="mainContainRef"></mainContainer>
+          <mainContainer ref="mainContainRef"></mainContainer>
         </el-main>
       </el-container>
     </el-container>
@@ -67,8 +67,8 @@
 </template>
 
 <script setup lang="ts">
-import { getImageCatList, addImageCate, updateImageCate, deleteImageCate } from '@/api/image/cat';
-import type { ImageCatList, ImageCatData } from '@/api/image/cat/type';
+import { getImageCatList, addImageCate, updateImageCate, deleteImageCate } from '@/api/image/index';
+import type { ImageCatList, ImageCatData } from '@/api/image/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { FormInstance } from 'element-plus/es/components/form';
 import mainContainer from './mainContainer.vue';

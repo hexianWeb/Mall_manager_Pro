@@ -4,7 +4,14 @@
     <el-row :gutter="20">
       <el-col :span="6" :offset="0" v-for="item in imageListData" :key="item.id">
         <el-card shadow="hover" class="m-2 p-0">
-          <el-image :src="item.url" fit="cover" lazy="true" class="w-full h-[150px]" />
+          <el-image
+            :src="item.url"
+            fit="cover"
+            :lazy="true"
+            class="w-full h-[150px]"
+            :preview-src-list="[item.url]"
+            :initial-index="0"
+          />
           <div class="image-name">
             <p>
               {{ item.name }}
@@ -12,7 +19,7 @@
           </div>
           <div class="flex content-center items-center justify-center p-3">
             <el-button type="primary" size="small">重命名</el-button>
-            <el-button type="primary" size="small">删除</el-button>
+            <el-button type="primary" size="small" @click="imageDeletion">删除</el-button>
           </div>
         </el-card>
       </el-col>
@@ -31,7 +38,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getImageListByCateId } from '@/api/image/cat';
+import { getImageListByCateId } from '@/api/image/index';
 import type { imageData } from '@/api/image/type';
 // 由于父子组件生命周期缘故 你不能通过传递父组件请求的数据来作为请求子组件数据的条件
 // const props = defineProps({
@@ -60,6 +67,19 @@ function getImageListData(cateId: number, page?: number | undefined) {
   });
 }
 
+/**
+ * 图片删除逻辑
+ */
+function imageDeletion() {
+  ElMessage({
+    message: '您无权删除图片！',
+    type: 'warning'
+  });
+}
+/**
+ * 加载对应分类所属的 图片列表
+ * @param id 当前图片分类的 ID
+ */
 const loadData = (id: number) => {
   getImageListData(id);
 };
