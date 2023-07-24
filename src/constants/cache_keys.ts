@@ -24,3 +24,6 @@ export const AMAP_MAP_KEY: string = '';
 
 // 百度地图 key
 export const BAIDU_MAP_KEY: string = '';
+
+// 上传图片地址
+export const UPLOADER_IMAGE_URL = '/api/image/upload';

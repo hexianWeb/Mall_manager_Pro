@@ -5,6 +5,7 @@
       <el-header>
         <div class="header flex justify-start p-3 pl-1">
           <el-button type="primary" @click="cateDialogAddtorShow()">新增图片分类</el-button>
+          <el-button type="warning" @click="isUploading = true">上传该分类的图片</el-button>
         </div>
       </el-header>
       <el-container class="h-5/6">
@@ -28,7 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="bottom min-h-min">
+          <div class="bottom min-h-min pt-2">
             <el-pagination
               background
               layout="prev, pager, next"
@@ -46,7 +47,7 @@
       </el-container>
     </el-container>
 
-    <!-- 表单部分 -->
+    <!-- 图库分类表单部分 -->
     <FormDrawer
       drawerSize="30%"
       :drawerTitle="drawerTitle"
@@ -63,15 +64,21 @@
         </el-form-item>
       </el-form>
     </FormDrawer>
+
+    <!-- 上传图片表单部分 -->
+    <el-drawer v-model="isUploading" title="上传图片" direction="rtl">
+      <imageUploader :data="{ image_class_id: activatedId }" @success="handleUploaderSuccess" />
+    </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getImageCatList, addImageCate, updateImageCate, deleteImageCate } from '@/api/image/index';
-import type { ImageCatList, ImageCatData } from '@/api/image/type';
+import type { ImageCatData } from '@/api/image/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { FormInstance } from 'element-plus/es/components/form';
 import mainContainer from './mainContainer.vue';
+import imageUploader from '@cp/imageUploader/src/index.vue';
 // 右侧图片类别栏位逻辑
 const imageCateListData = ref<ImageCatData[]>();
 const activatedId = ref<number>(0);
@@ -186,6 +193,19 @@ watch(activatedId, () => {
   mainContainRef.value!.loadData(activatedId.value);
 });
 
+/**
+ * 图片上传部分逻辑
+ */
+const isUploading = ref<boolean>(false);
+
+/**
+ * 上传成功 关闭 dialog 并刷新
+ */
+function handleUploaderSuccess() {
+  mainContainRef.value!.loadData(activatedId.value);
+  isUploading.value = false;
+}
+
 onMounted(() => {
   getCateData();
 });
@@ -194,6 +214,7 @@ onMounted(() => {
 :deep(.el-main) {
   display: flex;
   overflow: hidden;
+  padding-bottom: 0;
 }
 
 .aside-list {

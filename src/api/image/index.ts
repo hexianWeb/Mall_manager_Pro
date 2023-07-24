@@ -66,11 +66,17 @@ export function getImageListByCateId(id: number, page: number = 1, limit: number
   });
 }
 
-export function updateImageNameById(id: number, params: any) {
+/**
+ * 修改图片名称
+ * @param id 图库ID
+ * @param imageName 图片名称
+ * @returns 是否修改成功
+ */
+export function updateImageNameById(id: number, imageName: string) {
   return request.post<boolean>({
     url: `${ImageAPI.imageUrl}/${id}`,
     data: {
-      name: params
+      name: imageName
     }
   });
 }
