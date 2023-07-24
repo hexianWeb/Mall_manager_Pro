@@ -1,7 +1,8 @@
 import request from '@/service';
 import { ImageCatList, imageList } from '@/api/image/type';
 enum ImageAPI {
-  cateListUrl = '/image_class'
+  cateListUrl = '/image_class',
+  imageUrl = '/image'
 }
 
 /**
@@ -52,8 +53,24 @@ export function deleteImageCate(id: number) {
   });
 }
 
+/**
+ * 指定分类下的图片列表
+ * @param id 图库ID
+ * @param page 分页页码
+ * @param limit 每页显示条数
+ * @returns 返回指定分类下的图片列表
+ */
 export function getImageListByCateId(id: number, page: number = 1, limit: number = 10) {
   return request.get<imageList>({
     url: `${ImageAPI.cateListUrl}/${id}/image/${page}?limit = ${limit}`
+  });
+}
+
+export function updateImageNameById(id: number, params: any) {
+  return request.post<boolean>({
+    url: `${ImageAPI.imageUrl}/${id}`,
+    data: {
+      name: params
+    }
   });
 }

@@ -73,7 +73,7 @@ import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { FormInstance } from 'element-plus/es/components/form';
 import mainContainer from './mainContainer.vue';
 // 右侧图片类别栏位逻辑
-const imageCateListData = ref<ImageCatList>();
+const imageCateListData = ref<ImageCatData[]>();
 const activatedId = ref<number>(0);
 
 //分页器逻辑

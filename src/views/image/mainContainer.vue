@@ -18,7 +18,7 @@
             </p>
           </div>
           <div class="flex content-center items-center justify-center p-3">
-            <el-button type="primary" size="small">重命名</el-button>
+            <el-button type="primary" size="small" @click="imageRenameOperator(item)">重命名</el-button>
             <el-button type="primary" size="small" @click="imageDeletion">删除</el-button>
           </div>
         </el-card>
@@ -38,8 +38,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getImageListByCateId } from '@/api/image/index';
+import { getImageListByCateId, updateImageNameById } from '@/api/image/index';
 import type { imageData } from '@/api/image/type';
+import { confirmPopover } from '@/base-ui/confirmPopover/index';
+// FIXME: 记得删除我
 // 由于父子组件生命周期缘故 你不能通过传递父组件请求的数据来作为请求子组件数据的条件
 // const props = defineProps({
 //   cateId: {
@@ -48,6 +50,7 @@ import type { imageData } from '@/api/image/type';
 //   }
 // });
 const imageListData = ref<imageData[]>([]);
+const currentCateId = ref(0);
 //分页器逻辑
 const currentPage = ref(1);
 const total = ref(0);
@@ -76,11 +79,24 @@ function imageDeletion() {
     type: 'warning'
   });
 }
+
+function imageRenameOperator(image: imageData) {
+  confirmPopover('重命名当前图片', '请为图片重命名', image.name).then(({ value }) => {
+    updateImageNameById(image.id, value).then((res) => {
+      ElMessage({
+        message: '重命名成功',
+        type: 'success'
+      });
+      getImageListData(currentCateId.value);
+    });
+  });
+}
 /**
  * 加载对应分类所属的 图片列表
  * @param id 当前图片分类的 ID
  */
 const loadData = (id: number) => {
+  currentCateId.value = id;
   getImageListData(id);
 };
 
