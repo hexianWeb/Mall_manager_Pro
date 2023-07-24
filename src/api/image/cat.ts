@@ -1,5 +1,5 @@
 import request from '@/service';
-import { ImageCatList } from './type';
+import { ImageCatList, imageList } from './type';
 enum ImageAPI {
   cateListUrl = '/image_class'
 }
@@ -49,5 +49,11 @@ export function updateImageCate(id: number, params: any) {
 export function deleteImageCate(id: number) {
   return request.post<boolean>({
     url: `${ImageAPI.cateListUrl}/${id}/delete`
+  });
+}
+
+export function getImageListByCateId(id: number, page: number = 1, limit: number = 10) {
+  return request.get<imageList>({
+    url: `${ImageAPI.cateListUrl}/${id}/image/${page}?limit = ${limit}`
   });
 }

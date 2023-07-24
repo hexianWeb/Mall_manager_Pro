@@ -10,8 +10,8 @@
       <el-container class="h-5/6">
         <el-aside width="280px" class="flex flex-col rounded">
           <div class="top flex-auto overflow-y-scroll =">
-            <div v-for="image in imageCatListData" :key="image.id">
-              <div class="aside-list" :class="activatedId === image.id ? 'active' : ''">
+            <div v-for="image in imageCateListData" :key="image.id">
+              <div class="aside-list" :class="activatedId === image.id ? 'active' : ''" @click="activatedId = image.id">
                 <span class="cat-title flex-auto w-72 text-stone-500"> {{ image.name }} </span>
                 <span class="flex flex-auto w-28 items-center justify-between text-sky-500">
                   <el-icon :size="24">
@@ -41,12 +41,7 @@
           </div>
         </el-aside>
         <el-main class="flex flex-col rounded">
-          <div class="top flex-auto overflow-y-scroll main-container-height">
-            <div v-for="(a, index) in 100" :key="index">{{ a }}</div>
-          </div>
-          <div class="min-h-min">
-            <el-pagination background layout="prev, pager, next" :total="100" />
-          </div>
+          <mainContainer :cate-id="activatedId" ref="mainContainRef"></mainContainer>
         </el-main>
       </el-container>
     </el-container>
@@ -76,10 +71,10 @@ import { getImageCatList, addImageCate, updateImageCate, deleteImageCate } from 
 import type { ImageCatList, ImageCatData } from '@/api/image/cat/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { FormInstance } from 'element-plus/es/components/form';
-
+import mainContainer from './mainContainer.vue';
 // 右侧图片类别栏位逻辑
-const imageCatListData = ref<ImageCatList>();
-const activatedId = ref(0);
+const imageCateListData = ref<ImageCatList>();
+const activatedId = ref<number>(0);
 
 //分页器逻辑
 const currentPage = ref(1);
@@ -89,18 +84,16 @@ const limit = ref(10);
 /**
  * 获取图片分类数据
  */
-function getCateData(p?: number | undefined) {
-  if (typeof p == 'number') {
-    currentPage.value = p;
+function getCateData(page?: number | undefined) {
+  if (typeof page == 'number') {
+    currentPage.value = page;
   }
   getImageCatList(currentPage.value, limit.value).then((res) => {
-    imageCatListData.value = res.list;
+    imageCateListData.value = res.list;
     total.value = res.totalCount;
     activatedId.value = res.list[0].id;
   });
 }
-
-getCateData();
 
 //图片分类 dialog 框显示控制逻辑
 const formDrawerRef: Ref<typeof FormDrawer | null> = ref(null);
@@ -186,6 +179,16 @@ const rules = {
     }
   ]
 };
+
+// 图片列表逻辑 在左侧图片分类 activatedId 更改时发送一次数据请求
+const mainContainRef: Ref<typeof mainContainer | null> = ref(null);
+watch(activatedId, () => {
+  mainContainRef.value!.loadData(activatedId.value);
+});
+
+onMounted(() => {
+  getCateData();
+});
 </script>
 <style lang="less" scoped>
 :deep(.el-main) {
