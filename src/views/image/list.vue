@@ -17,9 +17,13 @@
                   <el-icon :size="24">
                     <Edit @click="cateDialogEditorShow(image)" />
                   </el-icon>
-                  <el-icon :size="24">
-                    <CloseBold />
-                  </el-icon>
+                  <el-popconfirm title="您确定要删除这个图片分类吗？" @confirm="cateDialogDeletorShow(image.id)">
+                    <template #reference>
+                      <el-icon :size="24">
+                        <CloseBold />
+                      </el-icon>
+                    </template>
+                  </el-popconfirm>
                 </span>
               </div>
             </div>
@@ -114,11 +118,12 @@ function handleCateSubmit() {
     }
     const promiseInstance = form.id ? updateImageCate(form.id, form) : addImageCate(form);
     promiseInstance.then(() => {
-      ElMessage({
+      ElNotification({
+        title: '当前操作',
         message: '操作成功',
         type: 'success'
       });
-      getCateData();
+      getCateData(currentPage.value);
       CateDialogClose();
     });
   });
@@ -146,6 +151,20 @@ function cateDialogEditorShow(image: ImageCatData) {
   formDrawerRef.value?.open();
 }
 
+/**
+ * 删除图片分类相关逻辑
+ * @param 图片分类 ID
+ */
+function cateDialogDeletorShow(id: number) {
+  deleteImageCate(id).then((res) => {
+    ElNotification({
+      title: '已删除',
+      message: '删除操作成功',
+      type: 'error'
+    });
+    getCateData(currentPage.value);
+  });
+}
 /**
  * 关闭图片分类 dialog
  */
