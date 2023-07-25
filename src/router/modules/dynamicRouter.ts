@@ -25,6 +25,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '图库管理'
     },
     component: () => import('@/views/image/list.vue')
+  },
+  {
+    path: '/notice/list',
+    name: 'noticeIndex',
+    meta: {
+      title: '公告管理'
+    },
+    component: () => import('@/views/notice/index.vue')
   }
 ];
 // 动态添加路由的方法

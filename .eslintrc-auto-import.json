@@ -5,8 +5,6 @@
     "ComputedRef": true,
     "EffectScope": true,
     "ElMessage": true,
-    "ElMessageBox": true,
-    "ElNotification": true,
     "InjectionKey": true,
     "PropType": true,
     "Ref": true,

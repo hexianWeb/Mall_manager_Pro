@@ -1,5 +1,5 @@
 import request from '@/service';
-import { PanelsData, btnItem } from './type';
+import { PanelsData } from './type';
 
 enum IndexAPI {
   statistics1Url = '/statistics1',
