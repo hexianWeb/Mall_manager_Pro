@@ -1,4 +1,4 @@
-<!-- VueWithTS -->
+<!-- 表单控件的最小单元 -->
 <template>
   <el-form-item :label="label">
     <template v-if="type === 'input'">
@@ -19,6 +19,7 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['update:modelValue']);
+
 const props = defineProps({
   modelValue: {
     type: [String, Number, Array, Object],
@@ -53,4 +54,3 @@ const value = computed({
   }
 });
 </script>
-<style scoped></style>

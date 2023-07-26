@@ -1,6 +1,8 @@
-export interface IFormItemProps {
+export interface IFormOption {
   label: string;
   type: string;
+  field: string;
   placeHolder: string;
-  otherOptions: object;
+  colLayout?: Object;
+  defaultFieldValue?: string;
 }

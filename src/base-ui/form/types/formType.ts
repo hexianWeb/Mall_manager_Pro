@@ -1,8 +1,7 @@
-import { IFormItemProps } from './formItemType';
+import { IFormOption } from './formItemType';
 
 export interface IFormProps {
   labelWidth: string;
   labelPosition: string;
-  // formPosition:string;
-  formItemOptions: IFormItemProps[];
+  formItemOptions: IFormOption[];
 }
