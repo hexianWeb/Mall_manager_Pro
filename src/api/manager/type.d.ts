@@ -29,6 +29,9 @@ export interface User {
   avatar?: string;
 }
 
+export interface UpdateUser extends User {
+  id: number;
+}
 export interface UserData {
   username: string;
   role_id: number;

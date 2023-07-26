@@ -9,7 +9,7 @@
     <el-card shadow="never" class="border-0">
       <!-- 新增|刷新 -->
       <div class="flex items-center justify-between mb-4">
-        <el-button type="primary" size="small" @click="handleCreate">新增</el-button>
+        <el-button type="primary" size="default" @click="handleCreate">新增</el-button>
         <el-tooltip effect="dark" content="刷新数据" placement="top">
           <el-button text @click="getData">
             <el-icon :size="20">
@@ -45,20 +45,25 @@
         </el-table-column>
         <el-table-column label="状态" width="120">
           <template #default="{ row }">
-            <el-switch v-model="row.status" size="small" :active-value="1" :inactive-value="0" />
+            <el-switch
+              v-model="row.status"
+              size="small"
+              :active-value="1"
+              :inactive-value="0"
+              @change="handleUpdateManagerStatus(row.id, row.status)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="最初创建时间" width="330" align="center" />
-        <el-table-column prop="update_time" label="最后上线时间" width="330" align="center" />
+        <el-table-column prop="update_time" label="最后修改时间" width="330" align="center" />
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
-
             <el-popconfirm
-              title="是否要删除该公告？"
+              title="是否要删除该管理员？"
               confirmButtonText="确认"
               cancelButtonText="取消"
-              @confirm="handleDelete(scope.row.id)"
+              @confirm="handleDeleteManagerById(scope.row.id)"
             >
               <template #reference>
                 <el-button text type="primary" size="small">删除</el-button>
@@ -81,11 +86,31 @@
 
       <FormDrawer ref="formDrawerRef" :drawer-title="drawerTitle" @submit="handleSubmit">
         <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
-          <el-form-item label="公告标题" prop="title">
-            <el-input v-model="form.title" placeholder="公告标题"></el-input>
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
-          <el-form-item label="公告内容" prop="content">
-            <el-input v-model="form.content" placeholder="公告内容" type="textarea" :rows="5"></el-input>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item label="头像上传">
+            <template #default>
+              <imageUploader></imageUploader>
+            </template>
+          </el-form-item>
+          <el-form-item label="所属角色" prop="role_id">
+            <el-select v-model="form.role_id" placeholder="选择所属角色">
+              <el-option
+                v-for="roleOption in roleOptionsList"
+                :key="roleOption.id"
+                :label="roleOption.name"
+                :value="roleOption.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态">
+            <template #default>
+              <el-switch v-model="form.status" size="small" :active-value="1" :inactive-value="0"></el-switch>
+            </template>
           </el-form-item>
         </el-form>
       </FormDrawer>
@@ -95,18 +120,12 @@
 <script setup lang="ts">
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import fromComponent from '@/base-ui/form';
+import imageUploader from '@cp/imageUploader/src/index.vue';
 import searchConfig from './config/search.conf';
-import { getNoticeList, createNotice, updateNotice, deleteNotice } from '@/api/notice/index';
-import { getManagerList } from '@/api/manager/index';
-import type { ManagerData } from '@/api/manager/type';
-import type { notice } from '@/api/notice/type';
-import { ElMessage } from 'element-plus';
+import { getManagerList, updateManagerStatusById, deleteManagerById, updateManagerInfoById } from '@/api/manager/index';
+import type { ManagerData, User, UpdateUser } from '@/api/manager/type';
 import { FormInstance } from 'element-plus/es/components/form';
-
-interface resetNotice {
-  title: '';
-  content: '';
-}
+import { createManager } from '../../api/manager/index';
 
 const tableData = ref<ManagerData[]>([]);
 
@@ -123,58 +142,114 @@ function getData(p: number | boolean = false) {
   if (typeof p == 'number') {
     currentPage.value = p;
   }
-
   getManagerList(currentPage.value, {
     limit: 6
   }).then((res) => {
     tableData.value = res.list;
     total.value = res.totalCount;
+    roleOptionsList.value = res.roles;
   });
 }
 
 /**
- *删除部分代码逻辑
+ * 修改管理员状态代码逻辑
+ */
+const handleUpdateManagerStatus = (id: number, status: number) => {
+  updateManagerStatusById(id, status)
+    .then((res: boolean) => {
+      if (res) {
+        ElMessage({
+          message: '更新成功',
+          type: 'success'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: '非超级管理员禁止操作',
+        type: 'error'
+      });
+    });
+};
+
+/**
+ *删除管理员 代码逻辑
  * @param id 公告 ID
  */
-const handleDelete = (id: number) => {
-  deleteNotice(id).then((res) => {
-    ElMessage({
-      message: '删除成功',
-      type: 'success'
+const handleDeleteManagerById = (id: number) => {
+  deleteManagerById(id)
+    .then((res) => {
+      if (res) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: '非超级管理员禁止操作',
+        type: 'error'
+      });
+    })
+    .finally(() => {
+      getData();
     });
-    getData();
-  });
 };
 
 /**
  * 表单部分逻辑
  */
+interface roleOption {
+  id: number;
+  name: string;
+}
+
 const formDrawerRef = ref<typeof FormDrawer | null>(null);
 const formRef = ref<FormInstance>();
-const form = reactive({
-  title: '',
-  content: ''
+const roleOptionsList = ref<roleOption[]>();
+
+const form = reactive<User>({
+  username: '',
+  password: '',
+  role_id: 2,
+  status: 0,
+  avatar: ''
 });
 
 /**
  * 表单验证规则
  */
 const rules = {
-  title: [
+  username: [
     {
       required: true,
-      message: '公告标题不能为空',
+      message: '用户名不能为空',
       trigger: 'blur'
     }
   ],
-  content: [
+  password: [
     {
       required: true,
-      message: '公告内容不能为空',
+      message: '密码公告不能为空',
+      trigger: 'blur'
+    }
+  ],
+  role_id: [
+    {
+      required: true,
+      message: '角色 ID 不能为空',
       trigger: 'blur'
     }
   ]
 };
+
+/**
+ * 头像上传逻辑
+ */
+// const handleAvatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
+//   avatarUrl.value = URL.createObjectURL(uploadFile.raw!);
+// };
 
 const editId = ref(0);
 const drawerTitle = computed(() => (editId.value ? '修改' : '新增'));
@@ -186,7 +261,7 @@ const handleSubmit = () => {
   formRef.value?.validate((valid) => {
     if (!valid) return;
 
-    const fun = editId.value ? updateNotice(editId.value, form) : createNotice(form);
+    const fun = editId.value ? updateManagerInfoById(editId.value, form) : createManager(form);
 
     fun.then(() => {
       ElMessage({
@@ -204,30 +279,35 @@ const handleSubmit = () => {
  * 重置表单逻辑
  * @param row 单行表单信息
  */
-function resetForm(row: notice | resetNotice) {
+function resetForm(row: any) {
   if (formRef.value) formRef.value.clearValidate();
-  if ('id' in row) {
-    for (const key in form) {
-      form[key] = row[key];
-    }
+  for (const key in form) {
+    form[key] = row[key];
   }
 }
 
-// 新增公告 popover显示逻辑
+/**
+ * 新增公告 popover 显示逻辑
+ */
 const handleCreate = () => {
   editId.value = 0;
   resetForm({
-    title: '',
-    content: ''
+    username: '',
+    password: '',
+    role_id: 2,
+    status: 0,
+    avatar: ''
   });
   formDrawerRef.value!.open();
 };
 
 /**
- * 修改公告 popover显示逻辑
+ * 修改公告 popover 显示逻辑
  * @param row 对应行所要展示的信息
  */
-const handleEdit = (row: notice) => {
+const handleEdit = (row: UpdateUser) => {
+  console.log(row);
+
   editId.value = row.id;
   resetForm(row);
   formDrawerRef.value!.open();
