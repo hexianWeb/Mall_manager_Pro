@@ -3,7 +3,7 @@
   <div class="container bg-white rounded h-5/6 m-3">
     <el-container class="h-full rounded">
       <el-header>
-        <div class="header flex justify-start p-3 pl-1">
+        <div class="header flex justify-start pt-3">
           <el-button type="primary" @click="cateDialogAddtorShow()">新增图片分类</el-button>
           <el-button type="warning" @click="isUploading = true">上传该分类的图片</el-button>
         </div>
@@ -42,7 +42,7 @@
           </div>
         </el-aside>
         <el-main class="flex flex-col rounded">
-          <mainContainer ref="mainContainRef"></mainContainer>
+          <mainContainer ref="mainContainRef" @picture-checked="handlePicChecked" :preview="preview"></mainContainer>
         </el-main>
       </el-container>
     </el-container>
@@ -79,6 +79,13 @@ import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { FormInstance } from 'element-plus/es/components/form';
 import mainContainer from './mainContainer.vue';
 import imageUploader from '@cp/imageUploader/src/index.vue';
+
+defineProps({
+  preview: {
+    type: Boolean,
+    default: () => true
+  }
+});
 // 右侧图片类别栏位逻辑
 const imageCateListData = ref<ImageCatData[]>();
 const activatedId = ref<number>(0);
@@ -206,6 +213,15 @@ function handleUploaderSuccess() {
   isUploading.value = false;
 }
 
+const emit = defineEmits(['pictureChecked']);
+
+/**
+ * 传递所选择照片信息给父组件
+ */
+function handlePicChecked(imgUrl: string) {
+  emit('pictureChecked', imgUrl);
+}
+
 onMounted(() => {
   getCateData();
 });
@@ -216,7 +232,9 @@ onMounted(() => {
   overflow: hidden;
   padding-bottom: 0;
 }
-
+:deep(.el-header) {
+  padding: 0;
+}
 .aside-list {
   cursor: pointer;
   @apply flex p-3;

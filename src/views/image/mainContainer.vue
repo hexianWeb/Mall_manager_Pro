@@ -3,13 +3,13 @@
   <div class="top flex-auto overflow-y-scroll main-container-height overflow-x-hidden">
     <el-row :gutter="20">
       <el-col :span="6" :offset="0" v-for="item in imageListData" :key="item.id">
-        <el-card shadow="hover" class="m-2 p-0">
+        <el-card shadow="hover" class="m-2 p-0" @click="handlePicChecked(item)">
           <el-image
             :src="item.url"
             fit="cover"
             :lazy="true"
             class="w-full h-[150px]"
-            :preview-src-list="[item.url]"
+            :preview-src-list="preview ? [item.url] : []"
             :initial-index="0"
           />
           <div class="image-name">
@@ -41,14 +41,14 @@
 import { getImageListByCateId, updateImageNameById } from '@/api/image/index';
 import type { imageData } from '@/api/image/type';
 import { confirmPopover } from '@/base-ui/confirmPopover/index';
-// FIXME: 记得删除我
-// 由于父子组件生命周期缘故 你不能通过传递父组件请求的数据来作为请求子组件数据的条件
-// const props = defineProps({
-//   cateId: {
-//     type: Number,
-//     required: true
-//   }
-// });
+
+defineProps({
+  preview: {
+    type: Boolean,
+    required: true
+  }
+});
+
 const imageListData = ref<imageData[]>([]);
 const currentCateId = ref(0);
 //分页器逻辑
@@ -71,7 +71,7 @@ function getImageListData(cateId: number, page?: number | undefined) {
 }
 
 /**
- * 图片删除逻辑
+ * 图片删除 popover 逻辑
  */
 function imageDeletion() {
   ElMessage({
@@ -80,6 +80,10 @@ function imageDeletion() {
   });
 }
 
+/**
+ * 图片重命名 popover 逻辑
+ * @param image 图片信息
+ */
 function imageRenameOperator(image: imageData) {
   confirmPopover('重命名当前图片', '请为图片重命名', image.name).then(({ value }) => {
     updateImageNameById(image.id, value).then((res) => {
@@ -91,6 +95,7 @@ function imageRenameOperator(image: imageData) {
     });
   });
 }
+
 /**
  * 加载对应分类所属的 图片列表
  * @param id 当前图片分类的 ID
@@ -100,9 +105,29 @@ const loadData = (id: number) => {
   getImageListData(id);
 };
 
+/**
+ * 对父组件暴露部分方法
+ */
 defineExpose({
   loadData
 });
+
+const emit = defineEmits(['pictureChecked']);
+
+/**
+ * 获取图片 url 并传递给父组件
+ * @param image 图片信息
+ */
+function handlePicChecked(image: imageData) {
+  if (image.url == '') {
+    ElMessage({
+      message: '请不要选择无法正常加载的图片',
+      type: 'error'
+    });
+  } else {
+    emit('pictureChecked', image.url);
+  }
+}
 </script>
 <style lang="less" scoped>
 .image-name {

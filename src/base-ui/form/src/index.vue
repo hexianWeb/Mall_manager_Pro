@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper bg-white py-1">
     <!-- header 部分 -->
-    <div class="header-wrapper m-1 pl-2 flex items-center justify-start text-slate-700">
+    <div class="header-wrapper">
       <el-icon><Search /></el-icon>
       <!-- header 插槽 用于定义搜索标题 -->
       <span class="text font-medium pl-1">
@@ -102,4 +102,7 @@ watch(formModel, (newValue: any) => {
 </script>
 <style lang="less" scoped>
 @import '@/assets/css/_var.less';
+.header-wrapper {
+  @apply m-1 pl-2 flex items-center justify-start text-slate-700;
+}
 </style>

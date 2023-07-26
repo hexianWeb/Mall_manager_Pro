@@ -94,7 +94,7 @@
           </el-form-item>
           <el-form-item label="头像上传">
             <template #default>
-              <imageUploader></imageUploader>
+              <chooseAvatar v-model="form.avatar"></chooseAvatar>
             </template>
           </el-form-item>
           <el-form-item label="所属角色" prop="role_id">
@@ -120,12 +120,17 @@
 <script setup lang="ts">
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import fromComponent from '@/base-ui/form';
-import imageUploader from '@cp/imageUploader/src/index.vue';
+import chooseAvatar from '@cp/chooseImage/src/index.vue';
 import searchConfig from './config/search.conf';
-import { getManagerList, updateManagerStatusById, deleteManagerById, updateManagerInfoById } from '@/api/manager/index';
+import {
+  getManagerList,
+  updateManagerStatusById,
+  deleteManagerById,
+  updateManagerInfoById,
+  createManager
+} from '@/api/manager/index';
 import type { ManagerData, User, UpdateUser } from '@/api/manager/type';
 import { FormInstance } from 'element-plus/es/components/form';
-import { createManager } from '../../api/manager/index';
 
 const tableData = ref<ManagerData[]>([]);
 
@@ -136,11 +141,11 @@ const limit = ref(10);
 
 /**
  * 获取管理员列表数据
- * @param p 如果为 boolean 则请求当前页码数据，如果为 number 则请求对应页码数据
+ * @param page 如果为 boolean 则请求当前页码数据，如果为 number 则请求对应页码数据
  */
-function getData(p: number | boolean = false) {
-  if (typeof p == 'number') {
-    currentPage.value = p;
+function getData(page: number | boolean = false) {
+  if (typeof page == 'number') {
+    currentPage.value = page;
   }
   getManagerList(currentPage.value, {
     limit: 6
@@ -245,11 +250,8 @@ const rules = {
 };
 
 /**
- * 头像上传逻辑
+ * 头像 URL 获取逻辑
  */
-// const handleAvatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
-//   avatarUrl.value = URL.createObjectURL(uploadFile.raw!);
-// };
 
 const editId = ref(0);
 const drawerTitle = computed(() => (editId.value ? '修改' : '新增'));
