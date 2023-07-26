@@ -27,6 +27,7 @@ export default defineConfig({
   plugins: [
     // 自动按需引入 vue\vue-router\pinia 等的 api
     AutoImport({
+      // 自动按需引入 vue 需要额外的import vue的api。比如使用ref时，需要先import { ref } from 'vue'。
       imports: ['vue', 'vue-router', 'pinia'],
       resolvers: [ElementPlusResolver()],
       eslintrc: {

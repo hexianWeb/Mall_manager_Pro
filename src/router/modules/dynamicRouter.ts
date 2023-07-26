@@ -33,6 +33,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '公告管理'
     },
     component: () => import('@/views/notice/index.vue')
+  },
+  {
+    path: '/manager/list',
+    name: 'managerList',
+    meta: {
+      title: '管理员列表'
+    },
+    component: () => import('@/views/manager/index.vue')
   }
 ];
 // 动态添加路由的方法
