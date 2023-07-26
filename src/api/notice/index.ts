@@ -12,7 +12,7 @@ enum IndexAPI {
  */
 export function getNoticeList(page: number) {
   return request.get<noticeList>({
-    url: `/notice/${page}`
+    url: `${IndexAPI.noticeUrl}/${page}`
   });
 }
 
@@ -23,7 +23,7 @@ export function getNoticeList(page: number) {
  */
 export function createNotice(params: any) {
   return request.post<newNotice>({
-    url: '/notice',
+    url: IndexAPI.noticeUrl,
     data: params
   });
 }
@@ -36,7 +36,7 @@ export function createNotice(params: any) {
  */
 export function updateNotice(id: number, params: any) {
   return request.post<boolean>({
-    url: '/notice/' + id,
+    url: IndexAPI.noticeUrl + id,
     data: params
   });
 }
@@ -47,5 +47,5 @@ export function updateNotice(id: number, params: any) {
  * @returns 成功响应
  */
 export function deleteNotice(id: number) {
-  return request.post({ url: `/notice/${id}/delete` });
+  return request.post({ url: `${IndexAPI.noticeUrl}/${id}/delete` });
 }
