@@ -16,7 +16,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     meta: {
       title: '商品页'
     },
-    component: () => import('@/views/goods/list.vue')
+    component: () => import('@/views/goods/index.vue')
   },
   {
     path: '/image/list',
