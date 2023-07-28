@@ -1,9 +1,9 @@
 <!-- VueWithTS -->
 <template>
   <div class="searchbar">
-    <fromComponent v-bind="searchConfig" @query="queryData" @reset="resetData">
+    <formComponent v-bind="searchConfig" @query="queryData" @reset="resetData">
       <template #header>角色管理 </template>
-    </fromComponent>
+    </formComponent>
   </div>
   <div class="content">
     <el-card shadow="never" class="border-0">
@@ -119,7 +119,7 @@
 </template>
 <script setup lang="ts">
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
-import fromComponent from '@/base-ui/form';
+import formComponent from '@/base-ui/form';
 import chooseAvatar from '@cp/chooseImage/src/index.vue';
 import searchConfig from './config/search.conf';
 import {
