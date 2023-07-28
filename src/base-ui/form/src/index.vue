@@ -35,7 +35,7 @@
     <!-- footer 部分结束 -->
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="searchbar">
 import { IFormOption } from '../types/formItemType';
 import formBase from './formBase.vue';
 const emit = defineEmits(['reset', 'query', 'formChange']);

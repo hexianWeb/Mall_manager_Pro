@@ -1,6 +1,6 @@
-import FromComponent from './src/index.vue';
+import Searchbar from './src/index.vue';
 
 export * from './types/formType';
 export * from './types/formItemType';
 
-export default FromComponent;
+export default Searchbar;
