@@ -5,6 +5,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import { resolve } from 'path';
+import vueJsx from '@vitejs/plugin-vue-jsx';
 export default defineConfig({
   css: {
     // css预处理器
@@ -45,7 +46,10 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()]
     }),
     vue(),
-    VueSetupExtend()
+    // vue 可以使用 jsx/tsx 语法
+    vueJsx(),
+    // name 可以写在 script 标签上
+    VueSetupExtend({})
   ],
   resolve: {
     alias: {

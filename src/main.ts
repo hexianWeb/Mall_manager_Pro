@@ -20,6 +20,7 @@ import { setupRouterGuard } from './router/guard';
 import errorHandler from '@/utils/errorHandler';
 // 全局自定义指令引入
 import directive from './directives/index';
+
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;
