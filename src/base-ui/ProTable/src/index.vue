@@ -16,7 +16,6 @@
             :selected-list="selectedList"
             :is-selected="isSelected"
           >
-            <el-button type="primary" size="default">新增</el-button>
           </slot>
         </div>
         <div class="header-button-right" v-if="toolButton">
@@ -90,57 +89,6 @@
             </slot>
           </div>
         </template>
-        <el-table-column label="管理员" width="200">
-          <template #default="{ row }">
-            <div class="flex items-center">
-              <div class="avatar">
-                <!-- 图片加载失败时的回退行为。 -->
-                <el-avatar :size="60" :src="row.avatar">
-                  <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-                </el-avatar>
-              </div>
-              <div class="detail ml-4">
-                <p class="text-sm whitespace-nowrap" :title="row.username">{{ row.username }}</p>
-                <small class="text-xs text-zinc-400 oldstyle-nums">ID: {{ row.id }}</small>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="所属角色" align="center">
-          <template #default="{ row }">
-            <el-tag effect="plain">
-              {{ row.role?.name || '-' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" width="120">
-          <template #default="{ row }">
-            <el-switch
-              v-model="row.status"
-              size="small"
-              :active-value="1"
-              :inactive-value="0"
-              @change="handleUpdateManagerStatus(row.id, row.status)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="create_time" label="最初创建时间" width="330" align="center" />
-        <el-table-column prop="update_time" label="最后修改时间" width="330" align="center" />
-        <el-table-column label="操作" width="180" align="center">
-          <template #default="scope">
-            <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
-            <el-popconfirm
-              title="是否要删除该管理员？"
-              confirmButtonText="确认"
-              cancelButtonText="取消"
-              @confirm="handleDeleteManagerById(scope.row.id)"
-            >
-              <template #reference>
-                <el-button text type="primary" size="small">删除</el-button>
-              </template>
-            </el-popconfirm>
-          </template>
-        </el-table-column>
       </el-table>
 
       <!-- 分页组件 -->
@@ -161,6 +109,7 @@
 <script setup lang="ts">
 import Searchbar, { IFormProps } from '@/base-ui/form';
 import Pagination from './Pagination.vue';
+import TableColumn from './TableColumn.vue';
 import { useTable } from '@/hooks/useCommon';
 import { useSelection } from '@/hooks/useSelection';
 import type { ElTable } from 'element-plus/es/components/table';
@@ -217,7 +166,7 @@ const {
   reset,
   handleSizeChange,
   handleCurrentChange
-} = useTable(props.requestApi, props.initParam);
+} = useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
 
 /**
  * 根据请求 Query 参数查询用户数据
@@ -235,13 +184,53 @@ const resetData = () => {
   reset();
 };
 
-/**
- * 调用这个我乐意
- */
+// 接收 columns 并设置为响应式
+const tableColumns = ref<ColumnProps[]>(props.columns);
+
+// 定义 enumMap 存储 enum 值（避免异步请求无法格式化单元格内容 || 无法填充搜索下拉选择）
+const enumMap = ref(new Map<string, { [key: string]: any }[]>());
+provide('enumMap', enumMap);
+const setEnumMap = async (col: ColumnProps) => {
+  if (!col.enum) return;
+  // 如果当前 enum 为后台数据需要请求数据，则调用该请求接口，并存储到 enumMap
+  if (typeof col.enum !== 'function') return enumMap.value.set(col.prop!, col.enum!);
+  const { data } = await col.enum();
+  enumMap.value.set(col.prop!, data);
+};
+
+// 扁平化 columns
+const flatColumnsFunc = (columns: ColumnProps[], flatArr: ColumnProps[] = []) => {
+  columns.forEach(async (col) => {
+    if (col._children?.length) flatArr.push(...flatColumnsFunc(col._children));
+    flatArr.push(col);
+
+    // 给每一项 column 添加 isShow  默认属性
+    col.isShow = col.isShow ?? true;
+
+    // 设置 enumMap
+    setEnumMap(col);
+  });
+  return flatArr.filter((item) => !item._children?.length);
+};
+
+// flatColumns
+const flatColumns = ref<ColumnProps[]>();
+flatColumns.value = flatColumnsFunc(tableColumns.value);
+
+// 列设置 ==> 过滤掉不需要设置的列
+const colRef = ref();
+const colSetting = tableColumns.value!.filter(
+  (item) => !['selection', 'index', 'expand'].includes(item.type!) && item.prop !== 'operation' && item.isShow
+);
+const openColSetting = () => colRef.value.openColSetting();
 onMounted(() => {
-  resetData();
+  getTableList();
 });
 
+// 监听页面 initParam 改化，重新获取表格数据
+watch(() => props.initParam, getTableList, { deep: true });
+
+// 暴露给父组件的参数和方法(外部需要什么，都可以从这里暴露出去)
 defineExpose({
   element: tableRef,
   tableData,
