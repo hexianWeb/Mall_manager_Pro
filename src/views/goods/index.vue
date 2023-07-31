@@ -157,6 +157,13 @@ const columns: ColumnProps<any>[] = [
 ];
 
 /**
+ * 额外赋值逻辑 额外的赋值操作都在这里进行
+ * @param res 请求返回的参数
+ */
+const dataCallBack = (res: any) => {
+  roleOptionsList.value = res.roles;
+};
+/**
  *  获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
  * @type {ProTableInstance}
  */
@@ -224,14 +231,6 @@ const formRef = ref<FormInstance>();
 const roleOptionsList = ref<roleOption[]>();
 const editId = ref(0);
 const drawerTitle = computed(() => (editId.value ? '修改' : '新增'));
-
-/**
- * 额外赋值逻辑 额外的赋值操作都在这里进行
- * @param res 请求返回的参数
- */
-const dataCallBack = (res: any) => {
-  roleOptionsList.value = res.roles;
-};
 
 const form = reactive<User>({
   username: '',

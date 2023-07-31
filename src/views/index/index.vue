@@ -78,8 +78,6 @@ getStatistics1().then((res) => {
 });
 
 getStatistics2().then((res) => {
-  console.log(res);
-
   goodsData.value = res.goods;
   orderData.value = res.order;
 });

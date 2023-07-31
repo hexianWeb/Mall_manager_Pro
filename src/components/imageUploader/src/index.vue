@@ -45,8 +45,6 @@ const emit = defineEmits(['success', 'failed']);
  * @param uploadFiles
  */
 function onUploadSuccess(response: any, uploadFile: UploadFile, uploadFiles: UploadFiles): void {
-  console.log(response, uploadFile, uploadFiles);
-
   emit('success', {
     response,
     uploadFile,
