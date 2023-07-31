@@ -12,6 +12,14 @@ export interface NewRule {
   order: number;
   icon: string;
   frontpath: string;
+  rules?: {
+    id: number;
+    pivot: {
+      id: number;
+      role_id: number;
+      rule_id: number;
+    };
+  }[];
 }
 
 export interface RuleList {

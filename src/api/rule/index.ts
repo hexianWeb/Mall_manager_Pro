@@ -33,7 +33,7 @@ export function createRule(data: NewRule) {
  */
 export function updateRule(id: number, data: NewRule) {
   return request.post({
-    url: ruleAPI.ruleUrl + id,
+    url: ruleAPI.ruleUrl + '/' + id,
     data
   });
 }
@@ -60,6 +60,6 @@ export function updateRuleStatus(id: number, status: number) {
  */
 export function deleteRule(id: number) {
   return request.post({
-    url: `/admin/rule/${id}/delete`
+    url: `${ruleAPI.ruleUrl}/${id}/delete`
   });
 }

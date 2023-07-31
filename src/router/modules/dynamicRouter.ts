@@ -49,6 +49,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '菜单权限列表'
     },
     component: () => import('@/views/access/index.vue')
+  },
+  {
+    path: '/role/list',
+    name: 'roleList',
+    meta: {
+      title: '角色权限列表'
+    },
+    component: () => import('@/views/role/index.vue')
   }
 ];
 // 动态添加路由的方法
