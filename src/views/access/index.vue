@@ -21,7 +21,7 @@
               :modelValue="data.status"
               :active-value="1"
               :inactive-value="0"
-              @change="handleStatusChange($event, data)"
+              @click.stop="handleStatusChange($event, data)"
             />
             <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
             <el-button text type="primary" size="small" @click.stop="addChild(data.id)">增加</el-button>
@@ -40,7 +40,7 @@
         </div>
       </template>
     </el-tree>
-    <FormDrawer ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
+    <FormDrawer ref="formDrawerRef" :drawerTitle="drawerTitle" @submit="handleSubmit">
       <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
         <el-form-item label="上级菜单" prop="rule_id">
           <el-cascader
@@ -83,8 +83,8 @@
 <script setup lang="tsx">
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import IconSelect from '@/base-ui/iconSelect/index.vue';
-import { useTable, useInitForm } from '@/hooks/useCommon.ts';
-import { getRuleList, updateRule, createRule } from '@/api/rule/index';
+import { useTable, useInitForm } from '@/hooks/useCommon';
+import { getRuleList, updateRule, createRule, updateRuleStatus } from '@/api/rule/index';
 
 /**
  * 默认展开菜单的 key 值总汇
@@ -117,12 +117,19 @@ const { formDrawerRef, formRef, form, rules, drawerTitle, handleSubmit, handleCr
 });
 
 // 添加子分类
-const addChild = (id) => {
+const addChild = (id: number) => {
   handleCreate();
   form.rule_id = id;
   form.status = 1;
 };
 
+const handleStatusChange = ($event: number, data: any) => {
+  updateRuleStatus(data.id, $event);
+  ElMessage({
+    message: '仅供演示，禁止更改',
+    type: 'error'
+  });
+};
 onMounted(() => {
   getTableList();
 });
