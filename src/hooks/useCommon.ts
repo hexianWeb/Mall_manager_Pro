@@ -64,8 +64,6 @@ export const useTable = (
         dataCallBack(res);
       }
       state.tableData = isPageable ? res.list : res;
-      console.log(state.tableData);
-
       // 解构后台返回的分页数据 (如果有分页更新分页信息)
       if (isPageable) {
         updatePageable({
@@ -194,7 +192,10 @@ export function useInitForm(opt: FormOptions) {
       const fun = editId.value ? opt.update(editId.value, form) : opt.create(form);
 
       fun.then(() => {
-        ElMessage(drawerTitle.value + '成功'); // Assuming there's a toast function
+        ElMessage({
+          message: drawerTitle.value + '成功',
+          type: 'success'
+        });
         // 修改刷新当前页，新增刷新第一页
         opt.getData(editId.value ? false : 1);
         formDrawerRef.value!.close();

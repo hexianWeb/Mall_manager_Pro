@@ -73,7 +73,7 @@ class Request {
         })
         .catch((err: any) => {
           console.log(err.response.data);
-          reject(err);
+          reject(err.response.data);
         });
     });
   }

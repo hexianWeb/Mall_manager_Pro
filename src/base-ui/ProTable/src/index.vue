@@ -2,7 +2,7 @@
 <template>
   <div class="content">
     <!-- 搜素组件 -->
-    <Searchbar v-bind="searchConfig" @query="queryData" @reset="resetData" v-show="isShowSearch">
+    <Searchbar v-bind="searchConfig" @query="queryData" @reset="resetData" v-show="searchConfig && isShowSearch">
       <template #header>角色管理 </template>
     </Searchbar>
     <!-- 搜素组件结束 -->
@@ -117,7 +117,7 @@ import type { ColumnProps } from '@/views/goods/types';
 
 export interface ProTableProps {
   columns: ColumnProps[]; // 列配置项  ==> 必传
-  searchConfig: IFormProps; //搜素配置项 ==>必传
+  searchConfig?: IFormProps; //搜素配置项 ==>必传
   data?: any[]; // 静态 table data 数据，若存在则不会使用 requestApi 返回的 data ==> 非必传
   requestAuto?: boolean; // 是否自动执行请求 api ==> 非必传（默认为true）
   title?: string; // 表格标题，目前只在打印的时候用到 ==> 非必传
@@ -223,6 +223,7 @@ const colSetting = tableColumns.value!.filter(
   (item) => !['selection', 'index', 'expand'].includes(item.type!) && item.prop !== 'operation' && item.isShow
 );
 const openColSetting = () => colRef.value.openColSetting();
+
 onMounted(() => {
   getTableList();
 });
