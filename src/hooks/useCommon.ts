@@ -1,10 +1,6 @@
+import type { FormInstance } from 'element-plus/es/components/form';
+import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { Table } from './interface';
-
-/**
- * 默认请求数据
- * @type {number}
- */
-const DEFAULT_PAGE = 6;
 /**
  * @description table 页面操作方法封装
  * @param {Function} requestApi 获取表格数据 requestApi 方法 (必传)
@@ -18,7 +14,6 @@ export const useTable = (
   isPageable: boolean = true,
   dataCallBack?: (data: any) => any,
   requestError?: (error: any) => void
-  // options: Table.Options = {}
 ) => {
   let state = reactive<Table.Options>({
     // 表格数据
@@ -28,7 +23,7 @@ export const useTable = (
       // 当前页数
       pageNum: 1,
       // 每页显示条数
-      pageSize: DEFAULT_PAGE,
+      pageSize: 10,
       // 总条数
       totalCount: 0
     },
@@ -64,12 +59,12 @@ export const useTable = (
     try {
       // 先把初始化参数和分页参数放到总参数里面
       Object.assign(state.totalParam, initParam, isPageable ? pageParam.value : {});
-
       let res = await requestApi(pageParam.value.pageNum, { ...state.searchInitParam, ...state.totalParam });
       if (dataCallBack && typeof dataCallBack == 'function') {
         dataCallBack(res);
       }
       state.tableData = isPageable ? res.list : res;
+      console.log(state.tableData);
 
       // 解构后台返回的分页数据 (如果有分页更新分页信息)
       if (isPageable) {
@@ -80,11 +75,10 @@ export const useTable = (
         });
       }
     } catch (error) {
+      console.log(error);
       requestError && requestError(error);
     }
   };
-
-  // getData();
 
   /**
    * @description 更新查询参数
@@ -169,3 +163,77 @@ export const useTable = (
     updatedTotalParam
   };
 };
+
+export interface FormOptions {
+  form: Record<string, any>;
+  rules?: Record<string, any>;
+  update: (id: number, form: Record<string, any>) => Promise<any>;
+  create: (form: Record<string, any>) => Promise<any>;
+  getData: (page?: number | false) => Promise<void>;
+}
+
+/**
+ * @description FormDrawer 组件页面操作方法封装
+ * @param opt 所需要参数
+ */
+export function useInitForm(opt: FormOptions) {
+  // 表单部分
+  const formDrawerRef = ref<typeof FormDrawer | null>(null);
+  const formRef = ref<FormInstance>();
+  const defaultForm: Record<string, any> = opt.form;
+  const form = reactive<Record<string, any>>({});
+  const rules: Record<string, any> = opt.rules || {};
+  const editId = ref<number>(0);
+  const drawerTitle = computed(() => (editId.value ? '修改' : '新增'));
+
+  const handleSubmit = () => {
+    if (!formRef.value) return;
+    formRef.value.validate((valid: boolean) => {
+      if (!valid) return;
+
+      const fun = editId.value ? opt.update(editId.value, form) : opt.create(form);
+
+      fun.then(() => {
+        ElMessage(drawerTitle.value + '成功'); // Assuming there's a toast function
+        // 修改刷新当前页，新增刷新第一页
+        opt.getData(editId.value ? false : 1);
+        formDrawerRef.value!.close();
+      });
+    });
+  };
+
+  // 重置表单
+  function resetForm(row: Record<string, any> | false = false) {
+    if (formRef.value) formRef.value.clearValidate();
+    for (const key in defaultForm) {
+      form[key] = row ? row[key] : defaultForm[key];
+    }
+  }
+
+  // 新增
+  const handleCreate = () => {
+    editId.value = 0;
+    resetForm();
+    formDrawerRef.value!.open();
+  };
+
+  // 编辑
+  const handleEdit = (row: Record<string, any>) => {
+    editId.value = row.id;
+    resetForm(row);
+    formDrawerRef.value!.open();
+  };
+
+  return {
+    formDrawerRef,
+    formRef,
+    form,
+    rules,
+    editId,
+    drawerTitle,
+    handleSubmit,
+    resetForm,
+    handleCreate,
+    handleEdit
+  };
+}
