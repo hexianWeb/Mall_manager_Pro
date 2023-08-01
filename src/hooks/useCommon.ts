@@ -168,6 +168,7 @@ export interface FormOptions {
   update: (id: number, form: Record<string, any>) => Promise<any>;
   create: (form: Record<string, any>) => Promise<any>;
   getData: (page?: number | false) => Promise<void>;
+  beforeSubmit?: Function;
 }
 
 /**
@@ -188,18 +189,30 @@ export function useInitForm(opt: FormOptions) {
     if (!formRef.value) return;
     formRef.value.validate((valid: boolean) => {
       if (!valid) return;
+      let processForm = {};
+      if (opt.beforeSubmit) {
+        processForm = opt.beforeSubmit({ ...form });
+      } else {
+        processForm = form;
+      }
+      const fun = editId.value ? opt.update(editId.value, processForm) : opt.create(processForm);
 
-      const fun = editId.value ? opt.update(editId.value, form) : opt.create(form);
-
-      fun.then(() => {
-        ElMessage({
-          message: drawerTitle.value + '成功',
-          type: 'success'
+      fun
+        .then(() => {
+          ElMessage({
+            message: drawerTitle.value + '成功',
+            type: 'success'
+          });
+          // 修改刷新当前页，新增刷新第一页
+          opt.getData(editId.value ? false : 1);
+          formDrawerRef.value!.close();
+        })
+        .catch((err) => {
+          ElMessage({
+            message: '错误:' + err.msg,
+            type: 'error'
+          });
         });
-        // 修改刷新当前页，新增刷新第一页
-        opt.getData(editId.value ? false : 1);
-        formDrawerRef.value!.close();
-      });
     });
   };
 

@@ -113,7 +113,7 @@ import TableColumn from './TableColumn.vue';
 import { useTable } from '@/hooks/useCommon';
 import { useSelection } from '@/hooks/useSelection';
 import type { ElTable } from 'element-plus/es/components/table';
-import type { ColumnProps } from '@/views/goods/types';
+import type { ColumnProps } from '../types';
 
 export interface ProTableProps {
   columns: ColumnProps[]; // 列配置项  ==> 必传
