@@ -73,6 +73,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '优惠券列表'
     },
     component: () => import('@/views/coupon/index.vue')
+  },
+  {
+    path: '/level/list',
+    name: 'levelList',
+    meta: {
+      title: '会员等级列表'
+    },
+    component: () => import('@/views/level/index.vue')
   }
 ];
 // 动态添加路由的方法
