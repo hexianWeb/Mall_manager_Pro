@@ -57,6 +57,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '角色权限列表'
     },
     component: () => import('@/views/role/index.vue')
+  },
+  {
+    path: '/skus/list',
+    name: 'skusList',
+    meta: {
+      title: '规格管理'
+    },
+    component: () => import('@/views/skus/index.vue')
   }
 ];
 // 动态添加路由的方法
