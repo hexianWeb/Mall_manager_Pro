@@ -3,7 +3,14 @@
   <div class="content">
     <!-- 搜素组件 -->
     <Searchbar v-bind="searchConfig" @query="queryData" @reset="resetData" v-show="searchConfig && isShowSearch">
-      <template #header>角色管理 </template>
+      <template v-slot:searchbarHeader>
+        <slot name="searchbarHeader"></slot>
+      </template>
+      <template v-slot:searchbarContent>
+        <div class="mx-4">
+          <slot name="searchbarContent"></slot>
+        </div>
+      </template>
     </Searchbar>
     <!-- 搜素组件结束 -->
     <el-card shadow="never" class="border-0">
@@ -53,7 +60,14 @@
       </div>
       <!-- 按钮群组件结束 -->
 
-      <el-table ref="tableRef" :data="data ?? tableData" stripe :row-key="rowKey" @selection-change="selectionChange">
+      <el-table
+        ref="tableRef"
+        :data="data ?? tableData"
+        stripe
+        :row-key="rowKey"
+        @selection-change="selectionChange"
+        empty-text="暂无数据"
+      >
         <!-- 默认插槽 -->
         <slot></slot>
         <template v-for="item in tableColumns" :key="item">
@@ -84,7 +98,7 @@
         <template #empty>
           <div class="table-empty">
             <slot name="empty">
-              <img src="@/assets/images/notData.png" alt="notData" />
+              <img src="@/assets/img/notData.png" alt="notData" class="w-1/2 mx-auto" />
               <div>暂无数据</div>
             </slot>
           </div>
@@ -126,7 +140,7 @@ export interface ProTableProps {
   border?: boolean; // 是否带有纵向边框 ==> 非必传（默认为true）
   toolButton?: boolean; // 是否显示表格功能按钮 ==> 非必传（默认为true）
   rowKey?: string; // 行数据的 Key，用来优化 Table 的渲染，当表格数据多选时，所指定的 id ==> 非必传（默认为 id）
-  requestApi?: (params: any) => Promise<any>; // 请求表格数据的 api ==> 非必传
+  requestApi?: (...params: any[]) => Promise<any>; // 请求表格数据的 api ==> 非必传
   requestError?: (params: any) => void; // 表格 api 请求错误监听 ==> 非必传
   dataCallback?: (data: any) => any; // 返回数据的回调函数，可以对数据进行处理 ==> 非必传
 }

@@ -5,8 +5,11 @@
       <el-icon><Search /></el-icon>
       <!-- header 插槽 用于定义搜索标题 -->
       <span class="text font-medium pl-1">
-        <slot name="header"> </slot>
+        <slot name="searchbarHeader"> </slot>
       </span>
+    </div>
+    <div>
+      <slot name="searchbarContent"></slot>
     </div>
     <!-- header 部分结束 -->
 
