@@ -53,7 +53,7 @@ export function createGoods(data: Good) {
  * @returns 修改商品是否成功
  */
 export function updateGoods(id: number, data: updateGoodInfo) {
-  return request.post<boolean>({ url: `/admin/goods/${id}`, data });
+  return request.post<boolean>({ url: `${GoodsAPI.goodUrl}/${id}`, data });
 }
 
 /**
@@ -62,7 +62,7 @@ export function updateGoods(id: number, data: updateGoodInfo) {
  * @param status 商品状态
  * @returns 是否成功
  */
-export function updateGoodsStatus(ids: number[], status: 0 | 1) {
+export function updateGoodsStatus(ids: string[], status: 0 | 1) {
   return request.post<boolean>({
     url: `${GoodsAPI.goodUrl}/changestatus`,
     data: {
@@ -77,7 +77,7 @@ export function updateGoodsStatus(ids: number[], status: 0 | 1) {
  * @param ids 商品 ID 汇总
  * @returns 是否删除成功
  */
-export function deleteGoods(ids: number[]) {
+export function deleteGoods(ids: string[]) {
   return request.post<boolean>({
     url: `${GoodsAPI.goodUrl}/delete_all`,
     data: {
@@ -91,7 +91,7 @@ export function deleteGoods(ids: number[]) {
  * @param ids 商品 ID 汇总
  * @returns 是否恢复成功
  */
-export function restoreGoods(ids: number[]) {
+export function restoreGoods(ids: string[]) {
   return request.post<boolean>({
     url: `${GoodsAPI.goodUrl}/restore`,
     data: {
@@ -105,7 +105,7 @@ export function restoreGoods(ids: number[]) {
  * @param ids 商品 ID 汇总
  * @returns 是否恢复成功
  */
-export function destroyGoods(ids: number[]) {
+export function destroyGoods(ids: string[]) {
   return request.post<boolean>({
     url: `${GoodsAPI.goodUrl}/destroy`,
     data: {
