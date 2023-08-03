@@ -12,7 +12,7 @@ const columns: ColumnProps<any>[] = [
           <div class="avatar">
             {/* 图片加载失败时的回退行为。 */}
             <el-avatar size={60} src={row.avatar}>
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+              <img src="@/assets/img/notData.png" />
             </el-avatar>
           </div>
           <div class="detail ml-4">

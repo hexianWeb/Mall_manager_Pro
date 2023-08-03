@@ -3,38 +3,57 @@
     ref="proTable"
     :columns="columns"
     :searchConfig="searchConfig"
-    :requestApi="getManagerList"
+    :requestApi="getGoodsList"
     :init-param="initParam"
-    :data-callback="dataCallBack"
   >
+    <template #searchbarHeader> 商品管理 </template>
+    <template #searchbarContent>
+      <el-tabs v-model="initParam.tab">
+        <el-tab-pane :label="item.name" :name="item.key" v-for="(item, index) in tabBars" :key="index"></el-tab-pane>
+      </el-tabs>
+    </template>
     <!-- 表格 header 按钮 -->
     <template #tableHeader="scope">
       <el-button type="primary" @click="handleCreate()">
         <el-icon :size="20"> <CirclePlus /> </el-icon>
-        <span class="pl-1">新增用户</span>
+        <span class="pl-1">新增商品</span>
       </el-button>
-      <el-button type="primary" plain>
-        <el-icon :size="20">
-          <Upload />
-        </el-icon>
-        <span class="pl-1">批量添加用户</span>
-      </el-button>
-      <el-button v-auth="'export'" type="primary" plain>
-        <el-icon :size="20">
-          <Download />
-        </el-icon>
-        <span class="pl-1">导出用户数据</span>
-      </el-button>
-      <el-button type="primary" plain> To 子集详情页面 </el-button>
-      <el-button type="danger" plain :disabled="!scope.isSelected" @click="batchDelete(scope.selectedListIds)">
+      <el-button type="danger" plain :disabled="!scope.isSelected">
         <el-icon :size="20">
           <Delete />
         </el-icon>
-        <span class="pl-1">批量删除用户</span>
+        <span class="pl-1">批量删除商品</span>
+      </el-button>
+      <el-button
+        type="primary"
+        plain
+        :disabled="!scope.isSelected"
+        @click="handleUpdateGoodsStatus(scope.selectedListIds, 1)"
+      >
+        <el-icon :size="20">
+          <Upload />
+        </el-icon>
+        <span class="pl-1">批量上架商品</span>
+      </el-button>
+      <el-button
+        type="warning"
+        plain
+        :disabled="!scope.isSelected"
+        @click="handleUpdateGoodsStatus(scope.selectedListIds, 0)"
+      >
+        <el-icon :size="20">
+          <Download />
+        </el-icon>
+        <span class="pl-1">批量下架商品</span>
       </el-button>
     </template>
     <template #operation="scope">
-      <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
+      <el-button type="primary" size="default" text @click="handleEdit(scope.row)" :disabled="initParam.tab == 'delete'"
+        >修改</el-button
+      >
+      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品规格</el-button>
+      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">设置轮播图</el-button>
+      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品详情</el-button>
       <el-popconfirm
         title="是否要删除该管理员？"
         confirmButtonText="确认"
@@ -42,38 +61,61 @@
         @confirm="handleDeleteManagerById(scope.row.id)"
       >
         <template #reference>
-          <el-button text type="primary" size="small">删除</el-button>
+          <el-button text type="primary" size="default">删除</el-button>
         </template>
       </el-popconfirm>
     </template>
   </ProTableComponent>
   <FormDrawer ref="formDrawerRef" :drawer-title="drawerTitle" @submit="handleSubmit">
-    <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+    <el-form :model="form" ref="formRef" :rules="rules" label-width="120px" :inline="false">
+      <el-form-item label="商品名称" prop="title">
+        <el-input v-model="form.title" placeholder="请输入商品名称，不能超过60个字符"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+      <el-form-item label="封面" prop="cover">
+        <ChooseImage v-model="form.cover" />
       </el-form-item>
-      <el-form-item label="头像上传">
-        <template #default>
-          <chooseAvatar v-model="form.avatar"></chooseAvatar>
-        </template>
-      </el-form-item>
-      <el-form-item label="所属角色" prop="role_id">
-        <el-select v-model="form.role_id" placeholder="选择所属角色">
-          <el-option
-            v-for="roleOption in roleOptionsList"
-            :key="roleOption.id"
-            :label="roleOption.name"
-            :value="roleOption.id"
-          />
+      <el-form-item label="商品分类" prop="category_id">
+        <el-select v-model="form.category_id" placeholder="选择所属商品分类">
+          <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态">
-        <template #default>
-          <el-switch v-model="form.status" size="small" :active-value="1" :inactive-value="0"></el-switch>
-        </template>
+      <el-form-item label="商品描述" prop="desc">
+        <el-input type="textarea" v-model="form.desc" placeholder="选填，商品卖点"></el-input>
+      </el-form-item>
+      <el-form-item label="单位" prop="unit">
+        <el-input v-model="form.unit" placeholder="请输入单位" style="width: 50%"></el-input>
+      </el-form-item>
+      <el-form-item label="总库存" prop="stock">
+        <el-input v-model="form.stock" type="number" style="width: 40%">
+          <template #append>件</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="库存预警" prop="min_stock">
+        <el-input v-model="form.min_stock" type="number" style="width: 40%">
+          <template #append>件</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="最低销售价" prop="min_price">
+        <el-input v-model="form.min_price" type="number" style="width: 40%">
+          <template #append>元</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="最低原价" prop="min_oprice">
+        <el-input v-model="form.min_oprice" type="number" style="width: 40%">
+          <template #append>元</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="库存显示" prop="stock_display">
+        <el-radio-group v-model="form.stock_display">
+          <el-radio :label="0">隐藏</el-radio>
+          <el-radio :label="1">显示</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否上架" prop="status">
+        <el-radio-group v-model="form.status">
+          <el-radio :label="0">放入仓库</el-radio>
+          <el-radio :label="1">立即上架</el-radio>
+        </el-radio-group>
       </el-form-item>
     </el-form>
   </FormDrawer>
@@ -81,89 +123,123 @@
 <script setup lang="tsx">
 import type { FormInstance } from 'element-plus/es/components/form';
 import type { ProTableInstance, ColumnProps } from '@/base-ui/ProTable/types';
-import type { User, UpdateUser } from '@/api/manager/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import ProTableComponent from '@/base-ui/ProTable/src/index.vue';
-import chooseAvatar from '@cp/chooseImage/src/index.vue';
-import searchConfig from './config/search.conf';
-import {
-  getManagerList,
-  updateManagerStatusById,
-  deleteManagerById,
-  updateManagerInfoById,
-  createManager
-} from '@/api/manager/index';
-
-/**
- * 默认请求数据
- * @type {number}
- */
-const DEFAULT_PAGE = 6;
+import ChooseImage from '@cp/chooseImage/src/index.vue';
+import { searchConfig, categoryList } from './config/search.conf';
+import { getGoodsList, updateGoodsStatus, deleteGoods, updateGoods, createGoods } from '@/api/goods/index';
+import { useInitForm } from '@/hooks/useCommon';
 
 /**
  * 如果表格需要初始化请求参数，直接定义传给 ProTable 之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据
  * @type {Object}
  */
-const initParam = reactive({ limit: DEFAULT_PAGE });
+const initParam = reactive({ tab: 'all', limit: 3 });
 
 /**
  * 表格 Column 配置（ColumnProps）配置项
  * @type {ColumnProps}
  */
 const columns: ColumnProps<any>[] = [
+  { type: 'selection', width: 55 },
   {
-    prop: 'username',
-    label: '管理员',
-    width: 220,
+    prop: 'title',
+    label: '商品',
+    width: 410,
     render({ row }) {
       return (
         <div class="flex items-center">
-          <div class="avatar">
+          <div class="good flex">
             {/* 图片加载失败时的回退行为。 */}
-            <el-avatar size={60} src={row.avatar}>
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-            </el-avatar>
-          </div>
-          <div class="detail ml-4">
-            <p class="text-sm whitespace-nowrap" title={row.username}>
-              {row.username}
-            </p>
-            <small class="text-xs text-zinc-400 oldstyle-nums">ID: {row.id}</small>
+            <el-image src={row.cover} fit="cover" lazy={true} class="mr-3 rounded" style="width:150px;height: 120px;">
+              <template /* error */>
+                <img src="@/assets/img/notData.png" />
+              </template>
+            </el-image>
+            <div class="flex-1">
+              <p>{row.title}</p>
+              <div>
+                <span class="text-rose-500">最低销售价￥{row.min_price}</span>
+                <el-divider direction="vertical" />
+                <span class="text-teal-500 text-xxs">原价￥{row.min_oprice}</span>
+              </div>
+              <p class="text-gray-400 text-xxs">分类:{row.category ? row.category.name : '未分类'}</p>
+              <p class="text-gray-400 text-xxs">创建时间：{row.create_time}</p>
+            </div>
           </div>
         </div>
       );
     }
   },
+  { prop: 'sale_count', label: '实际销量', width: 120 },
   {
-    prop: 'role',
-    label: '状态',
-    width: 200,
+    prop: 'status',
+    label: '商品状态',
+    width: 120,
     render({ row }) {
       return (
-        <el-switch
-          v-model={row.status}
-          size="small"
-          active-value={1}
-          inactive-value={0}
-          onChange={() => handleUpdateManagerStatus(row.id, row.status)}
-        />
+        <el-tag type={row.status ? 'success' : 'danger'} size="default">
+          {row.status ? '上架' : '仓库'}
+        </el-tag>
       );
     }
   },
-  { prop: 'role.name', label: '所属角色', tag: true },
-  { prop: 'create_time', label: '最初创建时间', width: 300 },
-  { prop: 'update_time', label: '最后修改时间', width: 300 },
-  { prop: 'operation', label: '操作', fixed: 'right', width: 300 }
+  {
+    prop: 'ischeck',
+    label: '审核状态',
+    width: 120,
+    render({ row }) {
+      return (
+        <div>
+          {row.ischeck == 0 ? (
+            <div class="flex flex-col">
+              <el-button type="success" size="small" plain disabled={initParam.tab == 'delete'}>
+                审核通过
+              </el-button>
+              <el-button class="mt-2 !ml-0" type="danger" size="small" plain disabled={initParam.tab == 'delete'}>
+                审核拒绝
+              </el-button>
+            </div>
+          ) : (
+            <el-button type={row.ischeck == 1 ? 'success' : 'danger'} size="default" plain>
+              {row.ischeck == 1 ? '通过' : '拒绝'}
+            </el-button>
+          )}
+        </div>
+      );
+    }
+  },
+  { prop: 'stock', label: '总库存', width: 120 },
+  { prop: 'desc', label: '商品描述', width: 240 },
+  { prop: 'operation', label: '操作', fixed: 'right' }
 ];
 
-/**
- * 额外赋值逻辑 额外的赋值操作都在这里进行
- * @param res 请求返回的参数
- */
-const dataCallBack = (res: any) => {
-  roleOptionsList.value = res.roles;
-};
-
+const tabBars = [
+  {
+    key: 'all',
+    name: '全部'
+  },
+  {
+    key: 'checking',
+    name: '审核中'
+  },
+  {
+    key: 'saling',
+    name: '出售中'
+  },
+  {
+    key: 'off',
+    name: '已下架'
+  },
+  {
+    key: 'min_stock',
+    name: '库存预警'
+  },
+  {
+    key: 'delete',
+    name: '回收站'
+  }
+];
 /**
  *  获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
  * @type {ProTableInstance}
@@ -175,9 +251,8 @@ const proTable = ref<ProTableInstance>();
  * @param id 修改人 ID
  * @param status 要修改的状态
  */
-const handleUpdateManagerStatus = (id: number, status: number) => {
-  status = status == 1 ? 0 : 1;
-  updateManagerStatusById(id, status)
+const handleUpdateGoodsStatus = (ids: string[], status: 0 | 1) => {
+  updateGoodsStatus(ids, status)
     .then((res: boolean) => {
       if (res) {
         ElMessage({
@@ -191,6 +266,9 @@ const handleUpdateManagerStatus = (id: number, status: number) => {
         message: '非超级管理员禁止操作',
         type: 'error'
       });
+    })
+    .finally(() => {
+      proTable.value?.getTableList();
     });
 };
 
@@ -222,105 +300,22 @@ const handleDeleteManagerById = (id: number) => {
 /*
  * FormDrawer 表单部分逻辑
  */
-interface roleOption {
-  id: number;
-  name: string;
-}
-
-const formDrawerRef = ref<typeof FormDrawer | null>(null);
-const formRef = ref<FormInstance>();
-const roleOptionsList = ref<roleOption[]>();
-const editId = ref(0);
-const drawerTitle = computed(() => (editId.value ? '修改' : '新增'));
-
-const form = reactive<User>({
-  username: '',
-  password: '',
-  role_id: 2,
-  status: 0,
-  avatar: ''
+const { formDrawerRef, formRef, form, rules, drawerTitle, handleSubmit, handleCreate, handleEdit } = useInitForm({
+  form: {
+    title: null, //商品名称
+    category_id: null, //商品分类
+    cover: null, //商品封面
+    desc: null, //商品描述
+    unit: '件', //商品单位
+    stock: 100, //总库存
+    min_stock: 10, //库存预警
+    status: 1, //是否上架 0仓库1上架
+    stock_display: 1, //库存显示 0隐藏1显示
+    min_price: 0, //最低销售价
+    min_oprice: 0 //最低原价
+  },
+  getData: () => proTable.value!.getTableList(),
+  update: updateGoods,
+  create: createGoods
 });
-
-/**
- * 提交表单逻辑
- */
-const handleSubmit = () => {
-  formRef.value?.validate((valid) => {
-    if (!valid) return;
-
-    const fun = editId.value ? updateManagerInfoById(editId.value, form) : createManager(form);
-
-    fun.then(() => {
-      ElMessage({
-        message: drawerTitle.value + '成功',
-        type: 'success'
-      });
-      proTable.value?.getTableList();
-      formDrawerRef.value!.close();
-    });
-  });
-};
-
-/**
- * 重置表单逻辑
- * @param row 单行表单信息
- */
-function resetForm(row: any) {
-  if (formRef.value) formRef.value.clearValidate();
-  for (const key in form) {
-    form[key] = row[key];
-  }
-}
-
-/**
- * 表单验证规则
- */
-const rules = {
-  username: [
-    {
-      required: true,
-      message: '用户名不能为空',
-      trigger: 'blur'
-    }
-  ],
-  password: [
-    {
-      // required: true,
-      message: '密码公告不能为空',
-      trigger: 'blur'
-    }
-  ],
-  role_id: [
-    {
-      required: true,
-      message: '角色 ID 不能为空',
-      trigger: 'blur'
-    }
-  ]
-};
-
-/**
- * 新增公告 popover 显示逻辑
- */
-const handleCreate = () => {
-  editId.value = 0;
-  resetForm({
-    username: '',
-    password: '',
-    role_id: 2,
-    status: 0,
-    avatar: ''
-  });
-  formDrawerRef.value!.open();
-};
-
-/**
- * 修改公告 popover 显示逻辑
- * @param row 对应行所要展示的信息
- */
-const handleEdit = (row: UpdateUser) => {
-  editId.value = row.id;
-  resetForm(row);
-  formDrawerRef.value!.open();
-};
 </script>
