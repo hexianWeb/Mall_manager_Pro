@@ -67,10 +67,10 @@ export interface ReadGood {
   delete_time: string | null;
   order: number;
   category: Category;
-  goods_banner: GoodsBanner[];
-  goods_attrs: any[]; // You can define a type for this if needed
-  goods_skus: any[]; // You can define a type for this if needed
-  goods_skus_card: GoodsSkusCard[];
+  goodsBanner: GoodsBanner[];
+  goodsAttrs: any[]; // You can define a type for this if needed
+  goodsSkus: any[]; // You can define a type for this if needed
+  goodsSkusCard: GoodsSkusCard[];
 }
 
 export interface GoodsListResponse {
