@@ -18,7 +18,12 @@
         <el-icon :size="20"> <CirclePlus /> </el-icon>
         <span class="pl-1">新增商品</span>
       </el-button>
-      <el-button type="danger" plain :disabled="!scope.isSelected">
+      <el-button
+        type="danger"
+        plain
+        :disabled="!scope.isSelected"
+        @click="handleDeleteGoodsByIds(scope.selectedListIds)"
+      >
         <el-icon :size="20">
           <Delete />
         </el-icon>
@@ -52,13 +57,20 @@
         >修改</el-button
       >
       <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品规格</el-button>
-      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">设置轮播图</el-button>
+      <el-button
+        :type="scope.row.goods_banner.length == 0 ? 'danger' : 'primary'"
+        size="default"
+        text
+        :disabled="initParam.tab == 'delete'"
+        @click="handleSetGoodsBanners(scope.row)"
+        >设置轮播图</el-button
+      >
       <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品详情</el-button>
       <el-popconfirm
         title="是否要删除该管理员？"
         confirmButtonText="确认"
         cancelButtonText="取消"
-        @confirm="handleDeleteManagerById(scope.row.id)"
+        @confirm="handleDeleteGoodsByIds([scope.row.id])"
       >
         <template #reference>
           <el-button text type="primary" size="default">删除</el-button>
@@ -119,13 +131,15 @@
       </el-form-item>
     </el-form>
   </FormDrawer>
+  <banners ref="bannersRef" @reload-data="proTable?.getTableList" />
 </template>
 <script setup lang="tsx">
-import type { FormInstance } from 'element-plus/es/components/form';
 import type { ProTableInstance, ColumnProps } from '@/base-ui/ProTable/types';
+import type { ReadGood } from '@/api/goods/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import ProTableComponent from '@/base-ui/ProTable/src/index.vue';
 import ChooseImage from '@cp/chooseImage/src/index.vue';
+import banners from './banners.vue';
 import { searchConfig, categoryList } from './config/search.conf';
 import { getGoodsList, updateGoodsStatus, deleteGoods, updateGoods, createGoods } from '@/api/goods/index';
 import { useInitForm } from '@/hooks/useCommon';
@@ -276,8 +290,8 @@ const handleUpdateGoodsStatus = (ids: string[], status: 0 | 1) => {
  *删除管理员 代码逻辑
  * @param id 公告 ID
  */
-const handleDeleteManagerById = (id: number) => {
-  deleteManagerById(id)
+const handleDeleteGoodsByIds = (ids: string[]) => {
+  deleteGoods(ids)
     .then((res) => {
       if (res) {
         ElMessage({
@@ -318,4 +332,8 @@ const { formDrawerRef, formRef, form, rules, drawerTitle, handleSubmit, handleCr
   update: updateGoods,
   create: createGoods
 });
+
+// 设置轮播图
+const bannersRef = ref<typeof banners>();
+const handleSetGoodsBanners = (row: ReadGood) => bannersRef.value!.open(row);
 </script>
