@@ -79,6 +79,7 @@ function handleImageLoadingError() {
     message: '因为不可抗力因素，这个图片消失啦',
     type: 'error'
   });
+  emit('update:modelValue', '');
 }
 
 const removeImage = (url: string) => {
