@@ -38,7 +38,6 @@ const submit = () => {
   loading.value = true;
   setGoodsBanner(goodsId.value, form.banners)
     .then((res) => {
-      console.log(res);
       ElMessage({
         type: 'success',
         message: '设置轮播图成功'

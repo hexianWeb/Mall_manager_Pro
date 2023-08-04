@@ -115,16 +115,16 @@ export interface NewGoodInfo {
 }
 
 export interface updateGoodInfo {
-  title: string;
-  category_id: number;
-  cover: string;
-  desc: string;
-  unit: string;
-  stock: number;
-  min_stock: number;
-  status: 0 | 1;
-  stock_display: 0 | 1;
-  min_price: number;
-  min_oprice: number;
+  title?: string;
+  category_id?: number;
+  cover?: string;
+  desc?: string;
+  unit?: string;
+  stock?: number;
+  min_stock?: number;
+  status?: 0 | 1;
+  stock_display?: 0 | 1;
+  min_price?: number;
+  min_oprice?: number;
   content?: string;
 }

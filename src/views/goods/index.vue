@@ -65,7 +65,14 @@
         @click="handleSetGoodsBanners(scope.row)"
         >设置轮播图</el-button
       >
-      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品详情</el-button>
+      <el-button
+        :type="!scope.row.content ? 'danger' : 'primary'"
+        size="default"
+        text
+        :disabled="initParam.tab == 'delete'"
+        @click="handleSetGoodsContent(scope.row)"
+        >商品详情</el-button
+      >
       <el-popconfirm
         title="是否要删除该管理员？"
         confirmButtonText="确认"
@@ -131,7 +138,9 @@
       </el-form-item>
     </el-form>
   </FormDrawer>
+
   <banners ref="bannersRef" @reload-data="proTable?.getTableList" />
+  <content ref="contentRef" @reload-data="proTable?.getTableList" />
 </template>
 <script setup lang="tsx">
 import type { ProTableInstance, ColumnProps } from '@/base-ui/ProTable/types';
@@ -140,6 +149,7 @@ import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import ProTableComponent from '@/base-ui/ProTable/src/index.vue';
 import ChooseImage from '@cp/chooseImage/src/index.vue';
 import banners from './banners.vue';
+import content from './goodDetail.vue';
 import { searchConfig, categoryList } from './config/search.conf';
 import { getGoodsList, updateGoodsStatus, deleteGoods, updateGoods, createGoods } from '@/api/goods/index';
 import { useInitForm } from '@/hooks/useCommon';
@@ -336,4 +346,8 @@ const { formDrawerRef, formRef, form, rules, drawerTitle, handleSubmit, handleCr
 // 设置轮播图
 const bannersRef = ref<typeof banners>();
 const handleSetGoodsBanners = (row: ReadGood) => bannersRef.value!.open(row);
+
+// 设置商品详情
+const contentRef = ref<typeof content>();
+const handleSetGoodsContent = (row: ReadGood) => contentRef.value!.open(row);
 </script>

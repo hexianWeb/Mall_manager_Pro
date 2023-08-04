@@ -1,5 +1,5 @@
 <template>
-  <div v-if="modelValue">
+  <div v-if="modelValue && preview">
     <el-image
       v-if="typeof modelValue == 'string'"
       :src="modelValue"
@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div class="choose-image-btn" @click="open" v-else>
+  <div class="choose-image-btn" @click="open" v-else-if="preview">
     <el-icon :size="25" class="text-gray-500"><Plus /></el-icon>
   </div>
   <el-dialog title="选择图片" v-model="dialogVisible" width="80%" top="5vh">
@@ -46,13 +46,26 @@ const props = defineProps({
   limit: {
     type: Number,
     default: () => 1
+  },
+  preview: {
+    type: Boolean,
+    default: true
   }
 });
 /**
  * 图片选择 dialog 显示与隐藏
  */
 const dialogVisible = ref(false);
-const open = () => (dialogVisible.value = true);
+
+const callbackFunction = ref<Function>();
+
+const open = (callback?: Function | MouseEvent) => {
+  dialogVisible.value = true;
+  if (callback && typeof callback !== 'function') {
+    callback = undefined;
+  }
+  callbackFunction.value = callback;
+};
 const close = () => (dialogVisible.value = false);
 
 const emit = defineEmits(['update:modelValue']);
@@ -64,9 +77,12 @@ function getSelectedImage(imgUrl: string) {
   if (typeof props.modelValue == 'string') {
     emit('update:modelValue', imgUrl);
   } else {
-    const imgsUrl: string[] = props.modelValue!;
+    const imgsUrl: string[] = props.modelValue ?? [];
     imgsUrl.push(imgUrl);
     emit('update:modelValue', imgsUrl);
+  }
+  if (!props.preview && typeof callbackFunction.value === 'function') {
+    callbackFunction.value();
   }
   close();
 }
@@ -90,6 +106,9 @@ const removeImage = (url: string) => {
     );
   }
 };
+defineExpose({
+  open
+});
 </script>
 <style scoped>
 .image-header {
