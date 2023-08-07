@@ -33,7 +33,7 @@
       :pager-count="5"
       :current-page="currentPage"
       :page-size="limit"
-      @current-change="getImageListByCateId"
+      @current-change="getImageListData"
     />
   </div>
 </template>
@@ -60,11 +60,9 @@ const limit = ref(10);
  * 获取图片列表数据
  * @param {number} 当前页面
  */
-function getImageListData(cateId: number, page?: number | undefined) {
-  if (typeof page == 'number') {
-    currentPage.value = page;
-  }
-  getImageListByCateId(cateId, page).then((res) => {
+function getImageListData(page: number = 1) {
+  currentPage.value = page;
+  getImageListByCateId(currentCateId.value, page).then((res) => {
     imageListData.value = res.list;
     total.value = res.totalCount;
   });
@@ -91,7 +89,7 @@ function imageRenameOperator(image: imageData) {
         message: '重命名成功',
         type: 'success'
       });
-      getImageListData(currentCateId.value);
+      getImageListData(currentPage.value);
     });
   });
 }
@@ -102,7 +100,7 @@ function imageRenameOperator(image: imageData) {
  */
 const loadData = (id: number) => {
   currentCateId.value = id;
-  getImageListData(id);
+  getImageListData();
 };
 
 /**
