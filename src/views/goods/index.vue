@@ -56,7 +56,18 @@
       <el-button type="primary" size="default" text @click="handleEdit(scope.row)" :disabled="initParam.tab == 'delete'"
         >修改</el-button
       >
-      <el-button type="primary" size="default" text :disabled="initParam.tab == 'delete'">商品规格</el-button>
+      <el-button
+        :type="
+          (scope.row.sku_type == 0 && !scope.row.sku_value) || (scope.row.sku_type == 1 && !scope.row.goods_skus.length)
+            ? 'danger'
+            : 'primary'
+        "
+        size="default"
+        text
+        :disabled="initParam.tab == 'delete'"
+        @click="handleSetGoodsSkus(scope.row)"
+        >商品规格</el-button
+      >
       <el-button
         :type="scope.row.goods_banner.length == 0 ? 'danger' : 'primary'"
         size="default"
@@ -141,6 +152,7 @@
 
   <banners ref="bannersRef" @reload-data="proTable?.getTableList" />
   <content ref="contentRef" @reload-data="proTable?.getTableList" />
+  <skus ref="skusRef" @reload-data="proTable?.getTableList" />
 </template>
 <script setup lang="tsx">
 import type { ProTableInstance, ColumnProps } from '@/base-ui/ProTable/types';
@@ -150,6 +162,7 @@ import ProTableComponent from '@/base-ui/ProTable/src/index.vue';
 import ChooseImage from '@cp/chooseImage/src/index.vue';
 import banners from './banners.vue';
 import content from './goodDetail.vue';
+import skus from './skus.vue';
 import { searchConfig, categoryList } from './config/search.conf';
 import { getGoodsList, updateGoodsStatus, deleteGoods, updateGoods, createGoods } from '@/api/goods/index';
 import { useInitForm } from '@/hooks/useCommon';
@@ -350,4 +363,8 @@ const handleSetGoodsBanners = (row: ReadGood) => bannersRef.value!.open(row);
 // 设置商品详情
 const contentRef = ref<typeof content>();
 const handleSetGoodsContent = (row: ReadGood) => contentRef.value!.open(row);
+
+// 设置商品规格
+const skusRef = ref<typeof skus>();
+const handleSetGoodsSkus = (row: ReadGood) => skusRef.value!.open(row);
 </script>

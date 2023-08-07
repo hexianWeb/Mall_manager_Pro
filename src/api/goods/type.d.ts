@@ -19,7 +19,7 @@ export interface GoodsSkusCard {
   goods_id?: number;
   type?: number;
   order?: number;
-  goods_skus_card_value?: GoodsSkusCardValue[];
+  goodsSkusCardValue?: GoodsSkusCardValue[];
 }
 
 export interface GoodsSkusCardValue {
@@ -40,6 +40,26 @@ export interface Category {
   level: number;
 }
 
+interface Sku {
+  goods_skus_card_id: string;
+  name: string;
+  order: number;
+  value: string;
+  id: string;
+  text: string;
+}
+export interface GoodsSku {
+  skus: Sku[];
+  image: string;
+  pprice: number;
+  oprice: number;
+  cprice: number;
+  stock: number;
+  volume: number;
+  weight: number;
+  code: string;
+  goods_id: number;
+}
 export interface ReadGood {
   id: number;
   title: string;
@@ -69,7 +89,7 @@ export interface ReadGood {
   category: Category;
   goodsBanner: GoodsBanner[];
   goodsAttrs: any[]; // You can define a type for this if needed
-  goodsSkus: any[]; // You can define a type for this if needed
+  goodsSkus: GoodsSku[]; // You can define a type for this if needed
   goodsSkusCard: GoodsSkusCard[];
 }
 

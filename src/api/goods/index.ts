@@ -1,6 +1,6 @@
 import request from '@/service';
 import { objectToUrlParams } from '@/utils/Serializable';
-import {
+import type {
   OrderSearchParams,
   Good,
   GoodsBanner,
@@ -8,18 +8,20 @@ import {
   GoodsListResponse,
   NewGoodInfo,
   updateGoodInfo,
-  ReadGood
+  ReadGood,
+  GoodsSkusCard
 } from './type';
 
 enum GoodsAPI {
   goodUrl = '/goods',
-  goodSkusUrl = '/goods_skus_card_value'
+  goodSkusUrl = '/goods_skus_card',
+  goodSkusValueUrl = '/goods_skus_card_value'
 }
 
 interface id {
   id: number;
 }
-
+export interface GoodsSkusCardWithoutId extends Omit<GoodsSkusCard, 'id'> {}
 /**
  * 获取商品列表
  * @param page 页码
@@ -156,7 +158,7 @@ export function updateGoodsSkus(id: number, data: Record<string, any>) {
  * @param data 请求Body参数
  * @returns
  */
-export function createGoodsSkusCard(data: GoodsSkusCardValue) {
+export function createGoodsSkusCard(data: GoodsSkusCardWithoutId) {
   return request.post<GoodsSkusCardValue & id>({
     url: GoodsAPI.goodSkusUrl,
     data
@@ -169,7 +171,7 @@ export function createGoodsSkusCard(data: GoodsSkusCardValue) {
  * @param data 请求Body参数
  * @returns
  */
-export function updateGoodsSkusCard(id: number, data: GoodsSkusCardValue) {
+export function updateGoodsSkusCard(id: number, data: GoodsSkusCardWithoutId) {
   return request.post<boolean>({
     url: `${GoodsAPI.goodSkusUrl}/${id}`,
     data
@@ -205,7 +207,7 @@ export function sortGoodsSkusCard(data: Record<string, any>) {
  * @returns
  */
 export function createGoodsSkusCardValue(data: GoodsSkusCardValue) {
-  return request.post<GoodsSkusCardValue & id>({ url: `${GoodsAPI.goodSkusUrl}`, data });
+  return request.post<GoodsSkusCardValue & id>({ url: `${GoodsAPI.goodSkusValueUrl}`, data });
 }
 
 /**
@@ -216,7 +218,7 @@ export function createGoodsSkusCardValue(data: GoodsSkusCardValue) {
  */
 export function updateGoodsSkusCardValue(id: number, data: GoodsSkusCardValue) {
   return request.post<boolean>({
-    url: `${GoodsAPI.goodSkusUrl}/${id}`,
+    url: `${GoodsAPI.goodSkusValueUrl}/${id}`,
     data
   });
 }
@@ -228,7 +230,7 @@ export function updateGoodsSkusCardValue(id: number, data: GoodsSkusCardValue) {
  */
 export function deleteGoodsSkusCardValue(id: number) {
   return request.post<boolean>({
-    url: `${GoodsAPI.goodSkusUrl}/${id}/delete`
+    url: `${GoodsAPI.goodSkusValueUrl}/${id}/delete`
   });
 }
 
@@ -238,7 +240,7 @@ export function deleteGoodsSkusCardValue(id: number) {
  * @param data
  * @returns
  */
-export function chooseAndSetGoodsSkusCard(id: number, data: { name: string; value: [] }) {
+export function chooseAndSetGoodsSkusCard(id: number, data: { name: string; value: string[] }) {
   return request.post({
     url: `${GoodsAPI.goodSkusUrl}/${id}/set`,
     data

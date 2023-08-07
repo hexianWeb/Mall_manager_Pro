@@ -10,7 +10,7 @@ enum ImageAPI {
  * @param page 分页页码
  * @param limit 每页显示条数
  */
-export function getImageCatList(page: number = 1, limit: number = 10) {
+export function getImageCatList(page: number = 1, limit: number = 8) {
   return request.get<ImageCatList>({
     url: `${ImageAPI.cateListUrl}/${page}?limit=${limit}`
   });
@@ -60,7 +60,7 @@ export function deleteImageCate(id: number) {
  * @param limit 每页显示条数
  * @returns 返回指定分类下的图片列表
  */
-export function getImageListByCateId(id: number, page: number = 1, limit: number = 10) {
+export function getImageListByCateId(id: number, page: number = 1, limit: number = 8) {
   return request.get<imageList>({
     url: `${ImageAPI.cateListUrl}/${id}/image/${page}?limit = ${limit}`
   });
