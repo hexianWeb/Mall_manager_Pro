@@ -111,7 +111,7 @@ const { formDrawerRef, formRef, form, rules, drawerTitle, handleSubmit, handleCr
     frontpath: ''
   },
   rules: {},
-  getTableList,
+  getData: getTableList,
   update: updateRule,
   create: createRule
 });
