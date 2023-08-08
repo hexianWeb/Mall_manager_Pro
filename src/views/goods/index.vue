@@ -18,39 +18,65 @@
         <el-icon :size="20"> <CirclePlus /> </el-icon>
         <span class="pl-1">新增商品</span>
       </el-button>
-      <el-button
-        type="danger"
-        plain
-        :disabled="!scope.isSelected"
-        @click="handleDeleteGoodsByIds(scope.selectedListIds)"
-      >
-        <el-icon :size="20">
-          <Delete />
-        </el-icon>
-        <span class="pl-1">批量删除商品</span>
-      </el-button>
-      <el-button
-        type="primary"
-        plain
-        :disabled="!scope.isSelected"
-        @click="handleUpdateGoodsStatus(scope.selectedListIds, 1)"
-      >
-        <el-icon :size="20">
-          <Upload />
-        </el-icon>
-        <span class="pl-1">批量上架商品</span>
-      </el-button>
-      <el-button
-        type="warning"
-        plain
-        :disabled="!scope.isSelected"
-        @click="handleUpdateGoodsStatus(scope.selectedListIds, 0)"
-      >
-        <el-icon :size="20">
-          <Download />
-        </el-icon>
-        <span class="pl-1">批量下架商品</span>
-      </el-button>
+      <span v-if="initParam.tab == 'delete'" class="ml-2">
+        <el-button
+          type="success"
+          plain
+          @click="handleRestoreGoodByIds(scope.selectedListIds)"
+          :disabled="!scope.isSelected"
+        >
+          <el-icon :size="20"> <Refresh /> </el-icon>
+          <span class="pl-1">批量恢复商品</span>
+        </el-button>
+        <el-popconfirm
+          title="是否要批量彻底删除商品？"
+          confirmButtonText="确认"
+          cancelButtonText="取消"
+          @confirm="handleDestroyGoodByIds(scope.selectedListIds)"
+        >
+          <template #reference>
+            <el-button type="danger" plain :disabled="!scope.isSelected">
+              <el-icon :size="20"> <Delete /> </el-icon>
+              <span class="pl-1">批量彻底删除商品</span>
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </span>
+      <span v-else class="ml-2">
+        <el-button
+          type="danger"
+          plain
+          :disabled="!scope.isSelected"
+          @click="handleDeleteGoodsByIds(scope.selectedListIds)"
+        >
+          <el-icon :size="20">
+            <Delete />
+          </el-icon>
+          <span class="pl-1">批量删除商品</span>
+        </el-button>
+        <el-button
+          type="primary"
+          plain
+          :disabled="!scope.isSelected"
+          @click="handleUpdateGoodsStatus(scope.selectedListIds, 1)"
+        >
+          <el-icon :size="20">
+            <Upload />
+          </el-icon>
+          <span class="pl-1">批量上架商品</span>
+        </el-button>
+        <el-button
+          type="warning"
+          plain
+          :disabled="!scope.isSelected"
+          @click="handleUpdateGoodsStatus(scope.selectedListIds, 0)"
+        >
+          <el-icon :size="20">
+            <Download />
+          </el-icon>
+          <span class="pl-1">批量下架商品</span>
+        </el-button>
+      </span>
     </template>
     <template #operation="scope">
       <el-button type="primary" size="default" text @click="handleEdit(scope.row)" :disabled="initParam.tab == 'delete'"
@@ -164,7 +190,15 @@ import banners from './banners.vue';
 import content from './goodDetail.vue';
 import skus from './skus.vue';
 import { searchConfig, categoryList } from './config/search.conf';
-import { getGoodsList, updateGoodsStatus, deleteGoods, updateGoods, createGoods } from '@/api/goods/index';
+import {
+  getGoodsList,
+  updateGoodsStatus,
+  deleteGoods,
+  updateGoods,
+  createGoods,
+  destroyGoods,
+  restoreGoods
+} from '@/api/goods/index';
 import { useInitForm } from '@/hooks/useCommon';
 
 /**
@@ -306,19 +340,38 @@ const handleUpdateGoodsStatus = (ids: string[], status: 0 | 1) => {
     })
     .finally(() => {
       proTable.value?.getTableList();
+      proTable.value?.clearSelection();
     });
 };
 
 /**
- *删除管理员 代码逻辑
- * @param id 公告 ID
+ *删除商品 代码逻辑
+ * @param ids string[]
  */
-const handleDeleteGoodsByIds = (ids: string[]) => {
-  deleteGoods(ids)
+const handleDeleteGoodsByIds = (ids: string[]) => handleMutationByIds(deleteGoods, '删除成功!!', ids);
+
+/**
+ * 彻底删除商品 代码逻辑
+ * @params ids string[]
+ */
+const handleDestroyGoodByIds = (ids: string[]) => handleMutationByIds(destroyGoods, '彻底删除成功!!', ids);
+
+/**
+ * 彻底删除商品 代码逻辑
+ * @params ids string[]
+ */
+const handleRestoreGoodByIds = (ids: string[]) => handleMutationByIds(restoreGoods, '恢复商品成功!!', ids);
+
+/**
+ * 彻底删除商品 代码逻辑
+ * @params ids string[]
+ */
+const handleMutationByIds = (func: Function, msg: string = '操作成功', ids: string[]) => {
+  func(ids)
     .then((res) => {
       if (res) {
         ElMessage({
-          message: '删除成功',
+          message: '恢复商品成功!!',
           type: 'success'
         });
       }
@@ -331,6 +384,7 @@ const handleDeleteGoodsByIds = (ids: string[]) => {
     })
     .finally(() => {
       proTable.value?.getTableList();
+      proTable.value?.clearSelection();
     });
 };
 
