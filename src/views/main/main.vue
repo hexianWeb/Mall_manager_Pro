@@ -18,7 +18,9 @@
             <router-view v-slot="{ Component }">
               <transition name="fade">
                 <keep-alive>
-                  <component :is="Component" />
+                  <div>
+                    <component :is="Component" />
+                  </div>
                 </keep-alive>
               </transition>
             </router-view>

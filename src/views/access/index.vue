@@ -135,7 +135,7 @@ onMounted(() => {
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .custom-tree-node {
   flex: 1;
   display: flex;

@@ -7,6 +7,7 @@
     :init-param="initParam"
     :data-callback="dataCallBack"
   >
+    <template #searchbarHeader> 管理员管理 </template>
     <!-- 表格 header 按钮 -->
     <template #tableHeader="scope">
       <el-button type="primary" @click="handleCreate()">
