@@ -97,6 +97,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '会员管理'
     },
     component: () => import('@/views/user/index.vue')
+  },
+  {
+    path: '/comment/list',
+    name: 'commentList',
+    meta: {
+      title: '会员管理'
+    },
+    component: () => import('@/views/comment/index.vue')
   }
 ];
 // 动态添加路由的方法

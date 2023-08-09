@@ -81,8 +81,8 @@
 </template>
 <script setup lang="tsx">
 import type { FormInstance } from 'element-plus/es/components/form';
-import type { User, UpdateUser } from '@/api/manager/type';
 import type { ProTableInstance, ColumnProps } from '@/base-ui/ProTable/types';
+import type { User, UpdateUser } from '@/api/manager/type';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import ProTableComponent from '@/base-ui/ProTable/src/index.vue';
 import chooseAvatar from '@cp/chooseImage/src/index.vue';
