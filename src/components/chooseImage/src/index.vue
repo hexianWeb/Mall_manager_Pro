@@ -95,7 +95,7 @@ function handleImageLoadingError() {
     message: '因为不可抗力因素，这个图片消失啦',
     type: 'error'
   });
-  emit('update:modelValue', '');
+  emit('update:modelValue', 'http://localhost:5173/image/notData.png');
 }
 
 const removeImage = (url: string) => {
