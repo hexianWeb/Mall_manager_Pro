@@ -105,6 +105,30 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       title: '会员管理'
     },
     component: () => import('@/views/comment/index.vue')
+  },
+  {
+    path: '/setting/base',
+    name: 'settingBase',
+    meta: {
+      title: '基础设置'
+    },
+    component: () => import('@/views/setting/base.vue')
+  },
+  {
+    path: '/setting/buy',
+    name: 'settingBuy',
+    meta: {
+      title: '交易设置'
+    },
+    component: () => import('@/views/setting/buy.vue')
+  },
+  {
+    path: '/setting/ship',
+    name: 'settingShip',
+    meta: {
+      title: '交易设置'
+    },
+    component: () => import('@/views/setting/ship.vue')
   }
 ];
 // 动态添加路由的方法
