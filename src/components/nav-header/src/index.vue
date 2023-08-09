@@ -195,7 +195,6 @@ const handleLogOut = () => {
   .right-wrapper {
     display: flex;
     flex: 0 0 300px;
-    align-items: end;
     justify-content: flex-end;
     padding: 3px;
     .el-icon {

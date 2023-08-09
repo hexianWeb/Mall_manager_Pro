@@ -1,6 +1,6 @@
 <!-- VueWithTS -->
 <template>
-  <div class="top flex-auto overflow-y-scroll main-container-height overflow-x-hidden">
+  <div class="top flex-auto overflow-y-scroll overflow-x-hidden h-[600px]">
     <el-row :gutter="20">
       <el-col :span="6" :offset="0" v-for="item in imageListData" :key="item.id">
         <el-card shadow="hover" class="m-2 p-0" @click="handlePicChecked(item)">

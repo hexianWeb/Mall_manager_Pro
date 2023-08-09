@@ -3,7 +3,7 @@
   <div class="container bg-white rounded h-5/6 m-3">
     <el-container class="h-full rounded">
       <el-header>
-        <div class="header flex justify-start pt-3">
+        <div class="header flex justify-start mt-3 ml-2">
           <el-button type="primary" @click="cateDialogAddtorShow()">新增图片分类</el-button>
           <el-button type="warning" @click="isUploading = true">上传该分类的图片</el-button>
         </div>
