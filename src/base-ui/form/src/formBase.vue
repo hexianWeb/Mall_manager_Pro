@@ -12,7 +12,7 @@
       </el-select>
     </template>
     <template v-if="type === 'datepicker'">
-      <el-date-picker type="daterange" format="YYYY-MM-DD" v-model="value" v-bind="otherOptions" style="width: 100%">
+      <el-date-picker type="date" format="YYYY-MM-DD" v-model="value" v-bind="otherOptions" style="width: 100%">
       </el-date-picker>
     </template>
   </el-form-item>
@@ -47,6 +47,9 @@ const props = defineProps({
 
 const value = computed({
   set(newValue) {
+    if (props.type == 'datepicker') {
+      console.log(newValue);
+    }
     emit('update:modelValue', newValue);
   },
   get() {

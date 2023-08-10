@@ -5,7 +5,5 @@ export interface IFormOption {
   placeHolder?: string;
   colLayout?: Object;
   defaultFieldValue?: string;
-  otherOptions?: {
-    options: any;
-  };
+  otherOptions?: {};
 }
