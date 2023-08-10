@@ -107,6 +107,14 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/comment/index.vue')
   },
   {
+    path: '/order/list',
+    name: 'orderList',
+    meta: {
+      title: '订单管理'
+    },
+    component: () => import('@/views/order/index.vue')
+  },
+  {
     path: '/setting/base',
     name: 'settingBase',
     meta: {
@@ -126,9 +134,25 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     path: '/setting/ship',
     name: 'settingShip',
     meta: {
-      title: '交易设置'
+      title: '物流设置'
     },
     component: () => import('@/views/setting/ship.vue')
+  },
+  {
+    path: '/distribution/setting',
+    name: 'distributionSetting',
+    meta: {
+      title: '分销设置'
+    },
+    component: () => import('@/views/distribution/setting.vue')
+  },
+  {
+    path: '/distribution/index',
+    name: 'distributionIndex',
+    meta: {
+      title: '分销设置'
+    },
+    component: () => import('@/views/distribution/index.vue')
   }
 ];
 // 动态添加路由的方法
