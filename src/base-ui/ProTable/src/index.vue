@@ -2,7 +2,7 @@
 <template>
   <div class="content">
     <!-- 搜素组件 -->
-    <Searchbar v-bind="searchConfig" @query="queryData" @reset="resetData" v-show="searchConfig && isShowSearch">
+    <Searchbar v-if="searchConfig" v-bind="searchConfig" @query="queryData" @reset="resetData" v-show="isShowSearch">
       <template v-slot:searchbarHeader>
         <slot name="searchbarHeader"></slot>
       </template>
@@ -48,7 +48,7 @@
                 </el-icon>
               </el-button>
             </el-tooltip>
-            <el-tooltip effect="dark" content="搜索启用" placement="top">
+            <el-tooltip effect="dark" content="搜索启用" placement="top" v-if="searchConfig">
               <el-button text @click="isShowSearch = !isShowSearch">
                 <el-icon :size="20">
                   <Search />
@@ -131,7 +131,7 @@ import type { ColumnProps } from '../types';
 
 export interface ProTableProps {
   columns: ColumnProps[]; // 列配置项  ==> 必传
-  searchConfig?: IFormProps; //搜素配置项 ==>必传
+  searchConfig: IFormProps; //搜素配置项 ==>必传
   data?: any[]; // 静态 table data 数据，若存在则不会使用 requestApi 返回的 data ==> 非必传
   requestAuto?: boolean; // 是否自动执行请求 api ==> 非必传（默认为true）
   title?: string; // 表格标题，目前只在打印的时候用到 ==> 非必传

@@ -111,9 +111,9 @@ const columns: ColumnProps<any>[] = [
     render({ row }) {
       return (
         <div>
-          <div class="flex text-sm text-left">
+          <div class="flex text-sm text-left" v-copy={row.no}>
             <div class="flex-1">
-              <p>订单号：</p>
+              <p>订单号 (点击复制)：</p>
               <small class="text-blue-500">{row.no}</small>
             </div>
           </div>

@@ -1,8 +1,7 @@
 export interface UserState {
-  token?: string | null;
-  userInfo?: UserInfo | null;
-  // userMenus?: UserMenus[];
-  userMenus?: Menu[] | null;
+  token: string;
+  userInfo: UserInfo;
+  userMenus: Menu[];
 }
 
 export interface Account {

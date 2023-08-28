@@ -13,13 +13,13 @@ export function setupUser() {
 }
 export const useUserStore = defineStore({
   id: 'user',
-  state: (): UserState => ({
+  state: (): Partial<UserState> => ({
     token: undefined,
     userInfo: undefined,
     userMenus: undefined
   }),
   getters: {
-    getToken(): string | null {
+    getToken(): Partial<string> {
       return this.token || docCookie.get(USER_PERMISSION_KEY);
     },
     getUserInfo(): UserInfo | null {
@@ -42,7 +42,7 @@ export const useUserStore = defineStore({
       this.token = token;
       docCookie.set(USER_PERMISSION_KEY, token);
     },
-    setUserInfo(userInfo: UserInfo | null) {
+    setUserInfo(userInfo: UserInfo) {
       this.userInfo = userInfo;
       localCache.setCache(USER_INFO_KEY, userInfo);
     },
@@ -53,8 +53,8 @@ export const useUserStore = defineStore({
     $reset() {
       docCookie.remove(USER_PERMISSION_KEY);
       localCache.clearCache();
-      this.userInfo = null;
-      this.token = null;
+      this.userInfo = undefined;
+      this.token = undefined;
     },
     async login(account: Account) {
       try {
@@ -69,9 +69,6 @@ export const useUserStore = defineStore({
           message: `错误信息 ${err || '请求失败'}`
         });
       }
-      // // 4.跳转到用户第一个菜单 配合 router/guard 的 permission
-      // const firstMenu = getFirstMenuPath(UserMenusRes);
-      // router.push(firstMenu!.url);
     }
   }
 });

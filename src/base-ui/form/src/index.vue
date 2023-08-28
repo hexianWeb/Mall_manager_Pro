@@ -69,6 +69,7 @@ const props = defineProps({
 
 //获取所传递的配置项参数
 const rawFormOptions = toRef(props, 'formOptions');
+
 const formOptions: IFormOption[] = rawFormOptions.value;
 
 const formData: any = {};
