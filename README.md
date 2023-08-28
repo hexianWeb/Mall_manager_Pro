@@ -18,6 +18,10 @@
 
 ## 项目演示 (部分页面)
 
+**首页页面**
+
+![主控台](./readme/login.png)
+
 **主控台页面**
 
 ![主控台](./readme/首页.png)
@@ -121,8 +125,6 @@ pnpm install
 ```basic
 pnpm run dev
 ```
-
-
 
 ## 最后一些话
 

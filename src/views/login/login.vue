@@ -5,7 +5,7 @@
       <div class="login-wrapper">
         <div class="left-wrapper" v-if="!data.isScreenSmall"></div>
         <div class="right-wrapper">
-          <h2>Login to Blog Backend 🚀</h2>
+          <h2>hexianWeb 后台商城管理系统 🚀</h2>
           <div class="input-control">
             <input
               type="text"
@@ -37,7 +37,6 @@
             </transition>
           </div>
           <input type="submit" value="Login" class="loginBtn" @click="handleSubmit" />
-          <div class="bottom-text">没有账号? <a href="#">注册</a></div>
         </div>
       </div>
     </div>
@@ -173,7 +172,7 @@ const passWordFocus = ref(false);
         flex: 2;
         height: 100%;
         background-size: cover;
-        background-image: url('@/assets/Pinterest.jpeg');
+        background-image: url('@/assets/img/shop_img.jpg');
       }
       .right-wrapper {
         display: flex;
@@ -182,7 +181,7 @@ const passWordFocus = ref(false);
         flex: 3;
         background-color: #f1f1f1;
         h2 {
-          margin-top: 2em;
+          margin: 2em;
         }
         .input-control {
           position: relative;

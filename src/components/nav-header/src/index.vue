@@ -20,7 +20,7 @@
       <el-icon :size="20"><CollectionTag /></el-icon>
       <el-icon :size="20"><Paperclip /></el-icon>
       <el-space wrap>
-        <el-tag>等级</el-tag>
+        <el-tag>{{ userInfo?.role.name }}</el-tag>
       </el-space>
       <el-avatar :size="32" class="mr-3" :src="userInfo!.avatar" />
       <el-dropdown @command="handleCommand">
@@ -66,8 +66,8 @@ import type { FormInstance, FormRules } from 'element-plus';
 import FormDrawer from '@/base-ui/formDrawer/FormDrawer.vue';
 import { useUserStore } from '@/stores/modules/login';
 import { useFullscreen } from '@vueuse/core';
-import { updatePassword } from '@/api/admin';
-const route = useRoute();
+import { adminLogOut, updatePassword } from '@/api/admin';
+const router = useRouter();
 
 const userStore = useUserStore();
 
@@ -169,9 +169,13 @@ const handleCancelChangePassword = () => {
 };
 
 const handleLogOut = () => {
-  ElMessage({
-    message: '您尚未拥有修改密码的权利',
-    type: 'error'
+  adminLogOut().then(() => {
+    userStore.$reset();
+    router.push('/login');
+    ElMessage({
+      message: '您已退出系统',
+      type: 'success'
+    });
   });
 };
 </script>
@@ -194,7 +198,7 @@ const handleLogOut = () => {
   }
   .right-wrapper {
     display: flex;
-    flex: 0 0 300px;
+    flex: 0 0 470px;
     justify-content: flex-end;
     padding: 3px;
     .el-icon {
