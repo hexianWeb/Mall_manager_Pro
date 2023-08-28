@@ -54,39 +54,39 @@
 
 ```
 ├── src
-│   ├── api															# API 接口管理
-│   ├── App.vue														# 项目主组件
-│   ├── assets														# 静态资源文件
-│   ├── base-ui														# 基础样式组件
-│   ├── components													# 业务组件
-│   ├── constants													# 全局配置项
-│   ├── directives													# 全局指令文件
-│   ├── hooks														# 常用 Hooks 封装
-│   ├── main.ts														# 项目入口文件
-│   ├── router														# 路由管理
-│   ├── service														# 请求封装
-│   ├── stores														# 全局数据管理
-│   ├── utils														# 常用工具类
-│   ├── views														# 页面视图集
-|    |   ├── access														# 权限管理页面
-|    |   ├── category													# 分类管理
-|    |   ├── comment													# 评论管理
-|    |   ├── coupon														# 优惠券管理
-|    |   ├── distribution												# 分销管理
-|    |   ├── goods 														# 商品管理
-|    |   ├── image														# 图库管理
-|    |   ├── index														# 主控台
-|    |   ├── level														# 会员等级
-|    |   ├── login														# 登录页面
-|    |   ├── main														# router View 挂载组件
-|    |   ├── manager													# 管理员管理
-|    |   ├── not-found													# 404 页面
-|    |   ├── notice														# 公告管理
-|    |   ├── order														# 订单管理
-|    |   ├── role														# 角色管理
-|    |   ├── setting													# 基础设置
-|    |   ├── skus														# 规格管理
-|    |   └── user														# 用户管理
+│   ├── api				      # API 接口管理
+│   ├── App.vue		      # 项目主组件
+│   ├── assets		      # 静态资源文件
+│   ├── base-ui		      # 基础样式组件
+│   ├── components	    # 业务组件
+│   ├── constants			  # 全局配置项
+│   ├── directives			# 全局指令文件
+│   ├── hooks				    # 常用 Hooks 封装
+│   ├── main.ts				  # 项目入口文件
+│   ├── router				  # 路由管理
+│   ├── service				  # 请求封装
+│   ├── stores				  # 全局数据管理
+│   ├── utils				    # 常用工具类
+│   ├── views				    # 页面视图集
+|    |   ├── access				# 权限管理页面
+|    |   ├── category			# 分类管理
+|    |   ├── comment			# 评论管理
+|    |   ├── coupon				# 优惠券管理
+|    |   ├── distribution	# 分销管理
+|    |   ├── goods 				# 商品管理
+|    |   ├── image				# 图库管理
+|    |   ├── index				# 主控台
+|    |   ├── level				# 会员等级
+|    |   ├── login				# 登录页面
+|    |   ├── main				  # router View 挂载组件
+|    |   ├── manager			# 管理员管理
+|    |   ├── not-found		# 404 页面
+|    |   ├── notice				# 公告管理
+|    |   ├── order				# 订单管理
+|    |   ├── role				  # 角色管理
+|    |   ├── setting			# 基础设置
+|    |   ├── skus				  # 规格管理
+|    |   └── user				  # 用户管理
 |   └── vite-env.d.ts
 ├── tailwind.config.js
 ├── tsconfig.json
@@ -113,7 +113,7 @@ https://github.com/hexianWeb/Mall_manager_Pro.git
 - 安装依赖
 
 ```bash
-pnpm install 
+pnpm install
 ```
 
 - 本地启动
@@ -122,6 +122,14 @@ pnpm install
 pnpm run dev
 ```
 
+
+
 ## 最后一些话
 
-我知道人各有志，这个项目落地能跑。你可以那这个去应付老师啊，参加一些院级校级比赛啊。因为我也是大学过来的，我知道有些东西确实就是浪费时间。所以我不会说这个项目你克隆过去但只能学习。还是那一句话，随便用。侵权删
+当我构建这个商城后台管理系统的时候，我一直怀着一颗开放的心。我希望每个人都能随意使用这个系统，无需拘束，尽情发挥自己的想象力和创意。技术的世界充满了无限的可能性，而我深信，只要我们不断努力，我们的技术将会越来越好。
+
+愿你们在使用这个系统的过程中，能够找到便利和乐趣。愿你们的创意和激情在技术的海洋中迸发出耀眼的光芒。无论你是谁，无论你来自何方，我都衷心祝愿你的技术之旅充满成就和喜悦。
+
+让我们一起探索、学习、创造，共同构建一个更美好的技术世界。前路虽有挑战，但正是这些挑战让我们变得更强大。让我们一起迎接未来，以开放的心态，创造出更多令人惊叹的技术成就！
+
+祝福大家，技术越发展越好！
